@@ -935,27 +935,37 @@ show('finish');
     document.getElementById('pdfPeerEmail').textContent = document.getElementById('peerEmail').value || '';
     document.getElementById('pdfPeerHotel').textContent = document.getElementById('peerHotel').value || '';
 
-   // Group rows (PDF) — case-insensitive lookups
+ // Group rows (PDF) — case-insensitive + alias
 const gp      = computeGroupPercents();
 const descMap = groupDescMap();
 
-// Lowercased maps so lookups work regardless of casing
 const gpL   = Object.fromEntries(Object.entries(gp).map(([k,v]) => [k.toLowerCase(), v]));
 const descL = Object.fromEntries(Object.entries(descMap).map(([k,v]) => [k.toLowerCase(), v]));
 
-// Display labels as you want them to appear in the PDF
+// display labels you want:
 const order = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+
+// aliases so BED ↔ hospitality competencies resolve
+const aliasMap = {
+  "bed competencies": ["bed competencies", "hospitality competencies"],
+  "hospitality competencies": ["hospitality competencies", "bed competencies"]
+};
 
 const body = document.getElementById('pdfGroupRows');
 body.innerHTML = '';
 
 order.forEach((name) => {
-  const key    = name.toLowerCase();
-  const pctVal = gpL[key];                       // number or undefined
-  const pctTxt = (pctVal == null ? '—' : pctVal) + '%';
-  const dscTxt = descL[key] || '(add description)';
+  const key = name.toLowerCase();
+  const tryKeys = aliasMap[key] || [key];
 
-  const tr     = document.createElement('tr');
+  // pick the first key that exists
+  const pctValKey  = tryKeys.find(k => k in gpL);
+  const descValKey = tryKeys.find(k => k in descL);
+
+  const pctTxt = (pctValKey == null ? '—' : gpL[pctValKey]) + '%';
+  const dscTxt = descValKey == null ? '(add description)' : descL[descValKey];
+
+  const tr = document.createElement('tr');
 
   const tdName = document.createElement('td');
   tdName.textContent = 'Score ' + name;
@@ -966,9 +976,7 @@ order.forEach((name) => {
   const tdDesc = document.createElement('td');
   tdDesc.textContent = dscTxt;
 
-  tr.appendChild(tdName);
-  tr.appendChild(tdPct);
-  tr.appendChild(tdDesc);
+  tr.appendChild(tdName); tr.appendChild(tdPct); tr.appendChild(tdDesc);
   body.appendChild(tr);
 });
 
