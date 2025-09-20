@@ -1011,13 +1011,17 @@ order.forEach((name) => {
     });
   }
 
-  document.getElementById('congratsPdf').onclick = () => { buildPdfReport(); window.print(); };
+ document.getElementById('congratsPdf').onclick = () => { 
+  buildPdfReport(); 
+  window.print(); 
+};
 
-  // Init
-  loadQuestions();
-  show('welcome');   // ensure first page loads and dot 1 is red
+// Init
+loadQuestions();
+show('welcome');   // ensure welcome page loads and dot 1 is active
 })(); 
 </script>
+
 <script>
 // === Validation patch v2 (uses window.__S) ===
 (function(){
