@@ -820,22 +820,31 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   }
 
   function renderGroupResults(){
-    const holder = document.getElementById('groupResults');
-    if(!holder) return;
-    const gp = computeGroupPercents();
-    const desc = groupDescMap();
-    const order = ["hospitality skills","BED competencies","taking Ownership","collaboration"];
-    let rows = '';
-    order.forEach(name=>{
-      const p = gp[name] ?? 0;
-      rows += '<div class="group-row">'
-           +    '<div style="font-weight:600">'+name+' '+p+'%</div>'
-           +  '</div>'
-           +  '<div class="group-desc">'+(desc[name]||'')+'</div>';
-    });
-    holder.innerHTML = rows;
-  }
+  const holder = document.getElementById('groupResults');
+  if(!holder) return;
 
+  const gp = computeGroupPercents();
+  const desc = groupDescMap();
+
+  // lowercase maps for tolerant lookup
+  const gpL   = Object.fromEntries(Object.entries(gp).map(([k,v]) => [k.toLowerCase(), v]));
+  const descL = Object.fromEntries(Object.entries(desc).map(([k,v]) => [k.toLowerCase(), v]));
+
+  // Use whatever display casing you prefer here:
+  const order = ["Hospitality Skills","Hospitality Competencies","Taking Ownership","Collaboration"];
+
+  let rows = '';
+  order.forEach(name => {
+    const key = name.toLowerCase();
+    const p = gpL[key] ?? 0;
+    const d = descL[key] || '';
+    rows += '<div class="group-row">'
+         +    '<div style="font-weight:600">'+name+' '+p+'%</div>'
+         +  '</div>'
+         +  '<div class="group-desc">'+d+'</div>';
+  });
+  holder.innerHTML = rows;
+}
   // Navigation + eligibility modal
   const _eligOkBtn = document.getElementById('eligOk');
   const _eligCancelBtn = document.getElementById('eligCancel');
@@ -854,7 +863,6 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   el('backToInstructions').onclick = () => show('instructions');
   el('toQ2').onclick = () => { const l=el('list-q2'); l.innerHTML=''; (S.questions||[]).slice(18,35).forEach((q,i)=>l.appendChild(makeQ(q,19+i))); show('q2'); };
   el('backToQ1').onclick = () => show('q1');
-
   el('submitAll').onclick = () => {
     const totals = computeTotals();
     el('scorePercent').textContent = 'OVERALL SCORE ' + totals.pct + '%';
