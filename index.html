@@ -774,10 +774,10 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     }catch(e){
       S.questions = []; 
       S.groups = [
-        {"name":"hospitality skills","description":"Basic skills for daily tasks and guest care"},
-        {"name":"BED competencies","description":"Advanced ability to read people and situations"},
-        {"name":"take ownership","description":"Acting independently and sharing responsibility"},
-        {"name":"collaboration","description":"Building trust and helping people in other hotels"}
+        {"name":"hospitality skills","description":"basic skills for daily tasks and service"},
+        {"name":"BED competencies","description":"advanced ability to read people and situations"},
+        {"name":"take ownership","description":"acting independently and sharing responsibility"},
+        {"name":"collaboration","description":"building trust and helping people in other hotels"}
       ];
     }
   }
@@ -824,7 +824,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     if(!holder) return;
     const gp = computeGroupPercents();
     const desc = groupDescMap();
-    const order = ["Hospitality Skills","Hospitality Competencies","Taking Ownership","Collaboration"];
+    const order = ["hospitality skills","BED competencies","taking Ownership","collaboration"];
     let rows = '';
     order.forEach(name=>{
       const p = gp[name] ?? 0;
@@ -866,16 +866,16 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     markerStyle.textContent = '.gauge::after{left: calc(var(--marker) - 5px);}';
     let rec='';
 if (totals.pct < 50)
-  rec = '<span style="font-size:18px; font-weight:600;">You are behind and may need more support. Please contact your coach and ask your team members for guidance</span>';
+  rec = '<span style="font-size:16px; font-weight:600;">You are behind and may need more support. Please contact your coach and ask your team members for guidance</span>';
 else if (totals.pct < 70)
-  rec = '<span style="font-size:18px; font-weight:600;">Focus on self-development. Constant practice will make you better. Ask feedback from friends so you know you improve</span>';
+  rec = '<span style="font-size:16px; font-weight:600;">Focus on developing yourself. Practice makes you better. Ask feedback from your friends so you know what you can do better</span>';
 else if (totals.pct < 85)
-  rec = '<span style="font-size:18px; font-weight:600;">Great hospitality! Keep challenging yourself and help others by giving them honest and positive feedback</span>';
+  rec = '<span style="font-size:16px; font-weight:600;">Great hospitality! Keep challenging yourself and help others by giving them honest and positive feedback</span>';
 else
-  rec = '<span style="font-size:18px; font-weight:600;">Excellent! Your understanding of BED is an inspiration for others. Continue to lead others by example</span>';
+  rec = '<span style="font-size:16px; font-weight:600;">Excellent! Your understanding of BED is an inspiration for others. Continue to lead others by example</span>';
 
 document.getElementById('recText').innerHTML =
-  '<h4 style="font-size:11px; font-weight:400; color:#999999; margin-bottom:6px;">our recommendation</h4>' + rec;  
+  '<h4 style="font-size:11px; font-weight:400; color:#999999; margin:0 0 2px 0;">our recommendation</h4>' + rec;  
 renderGroupResults();
 show('finish');
   };
@@ -930,7 +930,7 @@ show('finish');
     // Group rows
     const gp = computeGroupPercents();
     const descMap = groupDescMap();
-    const order = ["Hospitality Skills","Hospitality Competencies","Taking Ownership","Collaboration"];
+    const order = ["hospitality skills","BED competencies","taking ownership","collaboration"];
     const body = document.getElementById('pdfGroupRows');
     body.innerHTML='';
     order.forEach(name=>{
