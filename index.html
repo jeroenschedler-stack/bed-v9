@@ -866,13 +866,13 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     markerStyle.textContent = '.gauge::after{left: calc(var(--marker) - 5px);}';
     let rec='';
 if (totals.pct < 50)
-  rec = '<span style="font-size:14px; font-weight:600;">You are behind and may need more support. Please contact your coach and ask your team members for guidance</span>';
+  rec = '<span style="font-size:18px; font-weight:600;">You are behind and may need more support. Please contact your coach and ask your team members for guidance</span>';
 else if (totals.pct < 70)
-  rec = '<span style="font-size:14px; font-weight:600;">Focus on self-development. Constant practice will make you better. Ask feedback from friends so you know you improve</span>';
+  rec = '<span style="font-size:18px; font-weight:600;">Focus on self-development. Constant practice will make you better. Ask feedback from friends so you know you improve</span>';
 else if (totals.pct < 85)
-  rec = '<span style="font-size:14px; font-weight:600;">Great hospitality! Keep challenging yourself and help others by giving them honest and positive feedback</span>';
+  rec = '<span style="font-size:18px; font-weight:600;">Great hospitality! Keep challenging yourself and help others by giving them honest and positive feedback</span>';
 else
-  rec = '<span style="font-size:14px; font-weight:600;">Excellent! Your understanding of BED is an inspiration for others. Continue to lead others by example</span>';
+  rec = '<span style="font-size:18px; font-weight:600;">Excellent! Your understanding of BED is an inspiration for others. Continue to lead others by example</span>';
 
 document.getElementById('recText').innerHTML = rec;  // <-- use innerHTML (was textContent)
 renderGroupResults();
