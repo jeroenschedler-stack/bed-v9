@@ -576,7 +576,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </select>
 </div>
 <h2 class="section-title">peer information</h2>
-<p class="intro">after you completed your self assessment one of your peers will review you. select anyone in your team who has worked in BED for at least 12 months</p>
+<p class="intro">after you assessed  yourself one of your friends will review you. select anyone in your team who has worked in BED for at least 12 months</p>
 <div class="row"><label for="peerName">name peer</label><input id="peerName"/></div>
 <div class="row"><label for="peerEmail">email peer</label><input id="peerEmail" type="email"/></div>
 <div class="row"><label for="peerHotel">peer location</label>
@@ -598,7 +598,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <section id="instructions" style="display:none">
 <h2 class="section-title">INSTRUCTIONS</h2>
 <p class="intro">
-      Read each statement and think how you act in these situations. Then select the rating that best fits you. Be honest with yourself. The goal of this assessment is to know what you do well and what you can do better
+      Read each statement and think how you act in these situations. Then select the rating that best fits you. Be honest with yourself. The goal is to find out what you're good at and if there are things that you can do better
     </p>
 <h2 class="section-title">RATING</h2>
 <ul class="scale-list" style="list-style:none; padding:0; margin:10px 0">
@@ -659,8 +659,8 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <!-- Modal -->
 <div class="modal-backdrop" id="eligBackdrop" style="position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:50">
 <div class="modal" style="width:min(92vw,520px); background:#fff; border-radius:18px; padding:20px; box-shadow:0 20px 60px rgba(0,0,0,.25)">
-<h3 style="margin:0 0 10px 0; font-size:18px">Please confirm</h3>
-<p style="margin:0 0 18px 0; font-size:16px; line-height:1.5; color:#222">has your peer worked in BED for at least 12 months?</p>
+<h3 style="margin:0 0 10px 0; font-size:18px">please confirm</h3>
+<p style="margin:0 0 18px 0; font-size:16px; line-height:1.5; color:#222">your friend worked in BED for at least 12 months?</p>
 <div class="row-btns" style="display:flex; justify-content:flex-end; gap:10px">
 <button class="btn-secondary" id="eligCancel">Cancel</button>
 <button id="eligOk">OK</button>
@@ -798,53 +798,67 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   }
 
   function computeGroupPercents(){
-    const byGroup = {};
-    (S.groups||[]).forEach(g=>byGroup[g.name]=[]);
-    (S.questions||[]).forEach(q=>{
-      const g = q.group;
-      const v = parseInt(S.answers[q.id],10);
-      if(g && !isNaN(v) && v>0) byGroup[g].push(v);
-    });
-    const res = {};
-    Object.keys(byGroup).forEach(g=>{
-      const vals = byGroup[g];
-      if(!vals.length){ res[g]=0; return; }
-      const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
-      res[g] = Math.round(25 + ((avg - 1) / 4) * 75);
-    });
+  // normalize helper
+  const norm = s => String(s||'').trim().toLowerCase();
+
+  // build buckets from the groups we actually have
+  const buckets = {};
+  (S.groups||[]).forEach(g => { buckets[norm(g.name)] = []; });
+
+  // drop answers into buckets (create on the fly if a group name differs)
+  (S.questions||[]).forEach(q=>{
+    const gk = norm(q.group);
+    const v  = parseInt(S.answers[q.id],10);
+    if (!isNaN(v) && v>0){
+      if(!buckets[gk]) buckets[gk] = [];        // tolerate name drift
+      buckets[gk].push(v);
+    }
+  });
+
+  // compute %
+  const out = {};
+  Object.keys(buckets).forEach(k=>{
+    const vals = buckets[k];
+    if(!vals.length){ out[k]=0; return; }
+    const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+    out[k] = Math.round(25 + ((avg - 1) / 4) * 75);
+  });
+  return out;
+}
+
     return res;
   }
 
   function groupDescMap(){
-    const m = {}; (S.groups||[]).forEach(g=>m[g.name]=g.description||''); return m;
-  }
+  const norm = s => String(s||'').trim().toLowerCase();
+  const m = {};
+  (S.groups||[]).forEach(g => { m[norm(g.name)] = g.description || ''; });
+  return m;
+}
 
  function renderGroupResults(){
   const holder = document.getElementById('groupResults');
-  if (!holder) return;
+  if(!holder) return;
 
-  const gp = computeGroupPercents();
+  const norm = s => String(s||'').trim().toLowerCase();
+  const gp   = computeGroupPercents();
   const desc = groupDescMap();
 
-  // tolerant lookups
-  const gpL   = Object.fromEntries(Object.entries(gp).map(([k,v]) => [k.toLowerCase(), v]));
-  const descL = Object.fromEntries(Object.entries(desc).map(([k,v]) => [k.toLowerCase(), v]));
-
-  // your display labels (lowercase + "BED competencies")
-  const order = ["hospitality skills","BED competencies","taking ownership","collaboration"];
-
+  // show in the order supplied by S.groups
   let rows = '';
-  order.forEach(name => {
-    const key = name.toLowerCase();
-    const p = gpL[key] ?? 0;
-    const d = descL[key] || '';
+  (S.groups||[]).forEach(g=>{
+    const key = norm(g.name);
+    const label = g.name;           // preserve original casing for display
+    const p = gp[key] ?? 0;
+    const d = desc[key] || '';
     rows += '<div class="group-row">'
-         +   '<div style="font-weight:600">'+name+' '+p+'%</div>'
-         + '</div>'
-         + '<div class="group-desc">'+d+'</div>';
+         +    '<div style="font-weight:600">'+label+' '+p+'%</div>'
+         +  '</div>'
+         +  '<div class="group-desc">'+d+'</div>';
   });
   holder.innerHTML = rows;
 }
+
   // Navigation + eligibility modal
   const _eligOkBtn = document.getElementById('eligOk');
   const _eligCancelBtn = document.getElementById('eligCancel');
@@ -935,7 +949,7 @@ show('finish');
     document.getElementById('pdfPeerEmail').textContent = document.getElementById('peerEmail').value || '';
     document.getElementById('pdfPeerHotel').textContent = document.getElementById('peerHotel').value || '';
 
- // Group rows (PDF) — case-insensitive + alias
+// Group rows (PDF) — case-insensitive + alias
 const gp      = computeGroupPercents();
 const descMap = groupDescMap();
 
@@ -979,6 +993,7 @@ order.forEach((name) => {
   tr.appendChild(tdName); tr.appendChild(tdPct); tr.appendChild(tdDesc);
   body.appendChild(tr);
 });
+
 
     // Statements table
     const tb = document.querySelector('#pdfStatements tbody');
