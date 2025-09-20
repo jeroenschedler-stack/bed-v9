@@ -935,20 +935,42 @@ show('finish');
     document.getElementById('pdfPeerEmail').textContent = document.getElementById('peerEmail').value || '';
     document.getElementById('pdfPeerHotel').textContent = document.getElementById('peerHotel').value || '';
 
-    // Group rows
-    const gp = computeGroupPercents();
-    const descMap = groupDescMap();
-    const order = ["hospitality skills","BED competencies","taking ownership","collaboration"];
-    const body = document.getElementById('pdfGroupRows');
-    body.innerHTML='';
-    order.forEach(name=>{
-      const tr = document.createElement('tr');
-      const tdName = document.createElement('td'); tdName.textContent = 'Score ' + name;
-      const tdPct = document.createElement('td'); tdPct.textContent = (gp[name] != null ? gp[name] : '—') + '%';
-      const tdDesc = document.createElement('td'); tdDesc.textContent = descMap[name] || '(add description)';
-      tr.appendChild(tdName); tr.appendChild(tdPct); tr.appendChild(tdDesc);
-      body.appendChild(tr);
-    });
+   // Group rows (PDF) — case-insensitive lookups
+const gp      = computeGroupPercents();
+const descMap = groupDescMap();
+
+// Lowercased maps so lookups work regardless of casing
+const gpL   = Object.fromEntries(Object.entries(gp).map(([k,v]) => [k.toLowerCase(), v]));
+const descL = Object.fromEntries(Object.entries(descMap).map(([k,v]) => [k.toLowerCase(), v]));
+
+// Display labels as you want them to appear in the PDF
+const order = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+
+const body = document.getElementById('pdfGroupRows');
+body.innerHTML = '';
+
+order.forEach((name) => {
+  const key    = name.toLowerCase();
+  const pctVal = gpL[key];                       // number or undefined
+  const pctTxt = (pctVal == null ? '—' : pctVal) + '%';
+  const dscTxt = descL[key] || '(add description)';
+
+  const tr     = document.createElement('tr');
+
+  const tdName = document.createElement('td');
+  tdName.textContent = 'Score ' + name;
+
+  const tdPct  = document.createElement('td');
+  tdPct.textContent = pctTxt;
+
+  const tdDesc = document.createElement('td');
+  tdDesc.textContent = dscTxt;
+
+  tr.appendChild(tdName);
+  tr.appendChild(tdPct);
+  tr.appendChild(tdDesc);
+  body.appendChild(tr);
+});
 
     // Statements table
     const tb = document.querySelector('#pdfStatements tbody');
