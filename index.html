@@ -634,7 +634,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <br/>
 <div id="groupResultsContainer" style="margin-top:18px">
 <div class="group-summary">
-<div class="group-results-header group-title" style="font-size: 22pt;font-weight:700;margin-bottom:8px">SCORE BY GROUP</div>
+<div class="group-results-header group-title" style="font-weight:700;margin-bottom:8px">SCORE BY GROUP</div>
 <div id="groupResults"></div>
 </div>
 </div>
@@ -819,19 +819,19 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     const m = {}; (S.groups||[]).forEach(g=>m[g.name]=g.description||''); return m;
   }
 
-  function renderGroupResults(){
+ function renderGroupResults(){
   const holder = document.getElementById('groupResults');
-  if(!holder) return;
+  if (!holder) return;
 
   const gp = computeGroupPercents();
   const desc = groupDescMap();
 
-  // lowercase maps for tolerant lookup
+  // tolerant lookups
   const gpL   = Object.fromEntries(Object.entries(gp).map(([k,v]) => [k.toLowerCase(), v]));
   const descL = Object.fromEntries(Object.entries(desc).map(([k,v]) => [k.toLowerCase(), v]));
 
-  // Use whatever display casing you prefer here:
-  const order = ["Hospitality Skills","Hospitality Competencies","Taking Ownership","Collaboration"];
+  // your display labels (lowercase + "BED competencies")
+  const order = ["hospitality skills","BED competencies","taking ownership","collaboration"];
 
   let rows = '';
   order.forEach(name => {
@@ -839,9 +839,9 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     const p = gpL[key] ?? 0;
     const d = descL[key] || '';
     rows += '<div class="group-row">'
-         +    '<div style="font-weight:600">'+name+' '+p+'%</div>'
-         +  '</div>'
-         +  '<div class="group-desc">'+d+'</div>';
+         +   '<div style="font-weight:600">'+name+' '+p+'%</div>'
+         + '</div>'
+         + '<div class="group-desc">'+d+'</div>';
   });
   holder.innerHTML = rows;
 }
