@@ -765,54 +765,20 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   }
 
   async function loadQuestions(){
-  // === Group name aliasing to keep backward compatibility ===
-  const GROUP_ALIASES = {
-    "Hospitality Skills": "hospitality skills",
-    "hospitality skills": "hospitality skills",
-    "Hospitality Competencies": "BED competencies",
-    "hospitality competencies": "BED competencies",
-    "BED competencies": "BED competencies",
-    "Taking Ownership": "taking ownership",
-    "taking ownership": "taking ownership",
-    "Collaboration": "collaboration",
-    "collaboration": "collaboration"
-  };
-  function normalizeGroupName(name){
-    const k = String(name||"").trim();
-    return GROUP_ALIASES.hasOwnProperty(k) ? GROUP_ALIASES[k] : k;
-  }
-
     try{
       const res = await fetch('questions.json', {cache:'no-store'});
       if(!res.ok) throw new Error('fetch failed');
       const data = await res.json();
       S.questions = data.questions || [];
       S.groups = data.groups || [];
-      // Normalize question group tags for safety
-      (S.questions||[]).forEach(q=>{ q.group = normalizeGroupName(q.group); });
-      // Normalize and de-dup groups
-      if(Array.isArray(S.groups) && S.groups.length){
-        const seen = new Map();
-        S.groups.forEach(g=>{
-          const nm = normalizeGroupName(g.name);
-          if(!seen.has(nm)) seen.set(nm, {name:nm, description:g.description||''});
-        });
-        // enforce desired order if all present
-        const desired = ["hospitality skills","BED competencies","taking ownership","collaboration"];
-        const final = [];
-        desired.forEach(n=>{ if(seen.has(n)) final.push(seen.get(n)); });
-        // append any extras (should be none)
-        seen.forEach((v,k)=>{ if(!final.find(x=>x.name===k)) final.push(v); });
-        S.groups = final;
-      }
     }catch(e){
       S.questions = []; 
       S.groups = [
-  {"name":"hospitality skills","description":"Basic service skills for daily tasks and guest care."},
-  {"name":"BED competencies","description":"Advanced ability to read people and situations."},
-  {"name":"taking ownership","description":"Acting independently and sharing responsibility."},
-  {"name":"collaboration","description":"Building trust and helping across the BED community."}
-];
+        {"name":"Hospitality Skills","description":"Basic service skills for daily tasks and guest care."},
+        {"name":"Hospitality Competencies","description":"Advanced ability to read people and situations."},
+        {"name":"Taking Ownership","description":"Acting independently and sharing responsibility."},
+        {"name":"Collaboration","description":"Building trust and helping across the BED community."}
+      ];
     }
   }
 
@@ -834,8 +800,6 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   function computeGroupPercents(){
     const byGroup = {};
     (S.groups||[]).forEach(g=>byGroup[g.name]=[]);
-    // Include any groups from questions not listed in S.groups
-    (S.questions||[]).forEach(q=>{ const n=normalizeGroupName(q.group); if(!(n in byGroup)) byGroup[n]=[]; });
     (S.questions||[]).forEach(q=>{
       const g = q.group;
       const v = parseInt(S.answers[q.id],10);
@@ -860,7 +824,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     if(!holder) return;
     const gp = computeGroupPercents();
     const desc = groupDescMap();
-    const order = (S.groups||[]).map(g=>g.name);
+    const order = ["Hospitality Skills","Hospitality Competencies","Taking Ownership","Collaboration"];
     let rows = '';
     order.forEach(name=>{
       const p = gp[name] ?? 0;
@@ -872,14 +836,12 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     holder.innerHTML = rows;
   }
 
-  
-  // Navigation + eligibility modal (replaced for reliability)
+  // Navigation + eligibility modal
   const _eligOkBtn = document.getElementById('eligOk');
   const _eligCancelBtn = document.getElementById('eligCancel');
   function openModal(){ document.getElementById('eligBackdrop').style.display='flex'; }
   function closeModal(){ document.getElementById('eligBackdrop').style.display='none'; }
 
-  // Welcome -> Instructions (with consent modal)
   el('toInstructions').onclick = () => {
     openModal();
     const oldOk = _eligOkBtn.onclick;
@@ -887,107 +849,37 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     _eligOkBtn.onclick = () => { closeModal(); show('instructions'); _eligOkBtn.onclick = oldOk; _eligCancelBtn.onclick = oldCancel; };
     _eligCancelBtn.onclick = () => { closeModal(); _eligOkBtn.onclick = oldOk; _eligCancelBtn.onclick = oldCancel; };
   };
-
-  // Instructions nav
   el('backToWelcome').onclick = () => show('welcome');
-  el('toQ1').onclick = () => { 
-    const l = el('list-q1'); 
-    l.innerHTML = '';
-    (S.questions||[]).slice(0,18).forEach((q,i)=> l.appendChild(makeQ(q, i+1)));
-    show('q1'); 
-  };
-
-  // Q1 <-> Q2
+  el('toQ1').onclick = () => { const l=el('list-q1'); l.innerHTML=''; (S.questions||[]).slice(0,18).forEach((q,i)=>l.appendChild(makeQ(q,i+1))); show('q1'); };
   el('backToInstructions').onclick = () => show('instructions');
-  el('toQ2').onclick = () => {
-    const l = el('list-q2');
-    l.innerHTML = '';
-    (S.questions||[]).slice(18,35).forEach((q,i)=> l.appendChild(makeQ(q, 19+i)));
-    show('q2');
-  };
+  el('toQ2').onclick = () => { const l=el('list-q2'); l.innerHTML=''; (S.questions||[]).slice(18,35).forEach((q,i)=>l.appendChild(makeQ(q,19+i))); show('q2'); };
   el('backToQ1').onclick = () => show('q1');
 
-  // Q2 -> Finish
-  el('backToQ2').onclick = () => show('q2');
-  el('nextToPeer').onclick = () => show('congrats');
-  el('congratsBack').onclick = () => show('finish');
-
-  // Submit from Q2 -> compute, render, go to finish
   el('submitAll').onclick = () => {
     const totals = computeTotals();
-    // Update main score
     el('scorePercent').textContent = 'OVERALL SCORE ' + totals.pct + '%';
-    // Gauge marker
     const gauge = el('gauge');
-    gauge.style.setProperty('--marker', totals.pct + '%');
-    gauge.style.position = 'relative';
-    let markerStyle = document.getElementById('markerStyle');
-    if (!markerStyle) {
-      markerStyle = document.createElement('style');
-      markerStyle.id = 'markerStyle';
-      document.head.appendChild(markerStyle);
-    }
+    gauge.style.setProperty('--marker', totals.pct + '%'); 
+    gauge.style.position='relative';
+    let markerStyle = document.getElementById('markerStyle'); 
+    if(!markerStyle){ markerStyle=document.createElement('style'); markerStyle.id='markerStyle'; document.head.appendChild(markerStyle);}
     markerStyle.textContent = '.gauge::after{left: calc(var(--marker) - 5px);}';
-    // Recommendation
-    let rec='';
-    if (totals.pct < 50) rec = 'You are behind and may need more support. Please contact your coach and ask your team members for guidance';
-    else if (totals.pct < 70) rec = 'Focus on self-development. Constant little improvements will already make you better. Ask feedback from friends so you know you improve';
-    else if (totals.pct < 85) rec = 'Great hospitality! Keep challenging yourself and help others by giving them honest and positive feedback';
-    else rec = 'Excellent! Your understanding of BED is an inspiration for others. Continue to lead others by example';
-    document.getElementById('recText').innerHTML =
-      '<h4 style="font-size:11px; font-weight:400; color:#999999; margin-bottom:6px;">our recommendation</h4>' + rec;
-
-    // Group results
+    let rec=''; 
+    if(totals.pct<50) rec='You are behind and may need more support. Please contact your coach and ask your team members for guidance'; 
+else if(totals.pct<70) rec='Focus on self-development. Constant practice will make you better. Ask feedback from friends so you know you improve'; 
+else if(totals.pct<85) rec='Great hospitality! Keep challenging yourself and help others by giving them honest and positive feedback'; 
+else rec='Excellent! Your understanding of BED is an inspiration for others. Continue to lead others by example';
+    document.getElementById('recText').textContent = rec;
     renderGroupResults();
-    // Go to finish page
     show('finish');
   };
 
-  // --- Robust wiring for Submit (permanent fix) ---
-  (function(){
-    function wireSubmit(){
-      try{
-        const btn = document.getElementById('submitAll');
-        if(!btn) return false;
-        // Ensure it's not a form submit by default
-        if(!btn.getAttribute('type')) btn.setAttribute('type','button');
-        // Remove previous to avoid duplicates
-        btn.onclick = null;
-        btn.addEventListener('click', () => {
-          try{
-            const totals = computeTotals();
-            document.getElementById('scorePercent').textContent = 'OVERALL SCORE ' + totals.pct + '%';
-            const gauge = document.getElementById('gauge');
-            if(gauge){ 
-              gauge.style.setProperty('--marker', totals.pct + '%');
-              gauge.style.position = 'relative';
-              let markerStyle = document.getElementById('markerStyle');
-              if (!markerStyle) { markerStyle = document.createElement('style'); markerStyle.id = 'markerStyle'; document.head.appendChild(markerStyle); }
-              markerStyle.textContent = '.gauge::after{left: calc(var(--marker) - 5px);}';
-            }
-            // Render groups and go
-            if(typeof renderGroupResults==='function') renderGroupResults();
-            if(typeof show==='function') show('finish');
-          }catch(e){ console.error('submitAll click error', e); }
-        }, {once:false});
-        return true;
-      }catch(e){ console.error('wireSubmit error', e); return false; }
-    }
-    // Initial try
-    if(!wireSubmit()){
-      // Retry a few times in case dynamic content loads late
-      let tries=0;
-      const t = setInterval(()=>{
-        tries++;
-        if(wireSubmit() || tries>20) clearInterval(t);
-      },150);
-    }
-    // Rewire if the button is replaced dynamically
-    const mo = new MutationObserver(() => wireSubmit());
-    mo.observe(document.body, {childList:true, subtree:true});
-  })();
-  // --- End robust wiring ---
-// Validation
+  el('backToQ2').onclick = () => show('q2');
+  el('nextToPeer').onclick = () => show('congrats');
+
+  el('congratsBack').onclick = () => show('finish');
+
+  // Validation
   ['nick','email','hotel','peerName','peerEmail','peerHotel'].forEach(id => {
     el(id).addEventListener('input', validateWelcome);
     el(id).addEventListener('change', validateWelcome);
@@ -1032,7 +924,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     // Group rows
     const gp = computeGroupPercents();
     const descMap = groupDescMap();
-    const order = (S.groups||[]).map(g=>g.name);
+    const order = ["Hospitality Skills","Hospitality Competencies","Taking Ownership","Collaboration"];
     const body = document.getElementById('pdfGroupRows');
     body.innerHTML='';
     order.forEach(name=>{
