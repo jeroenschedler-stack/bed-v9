@@ -1166,8 +1166,7 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
   }
 })();
 </script>
-
-<!-- === Group rename shim === -->
+<!-- === Non-invasive group rename + display sync (drop-in) === -->
 <script>
 (function(){
   const MAP = {
@@ -1178,23 +1177,66 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
   };
   const TARGET_ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
 
-  function normalize(){
+  function normalizeData(){
     const S = window.__S || window.S;
     if (!S || !Array.isArray(S.groups) || !Array.isArray(S.questions)) return false;
-
     S.groups.forEach(g => { if (MAP[g.name]) g.name = MAP[g.name]; });
     S.groups.sort((a,b) => TARGET_ORDER.indexOf(a.name) - TARGET_ORDER.indexOf(b.name));
     S.questions.forEach(q => { if (MAP[q.group]) q.group = MAP[q.group]; });
-
     return true;
+  }
+
+  function replaceOldLabelsIn(container){
+    if (!container) return;
+    const TEXT_MAP = {
+      "Hospitality Skills": "hospitality skills",
+      "Hospitality Competencies": "BED competencies",
+      "Taking Ownership": "taking ownership",
+      "Collaboration": "collaboration",
+      "Score Hospitality Skills": "Score hospitality skills",
+      "Score Hospitality Competencies": "Score BED competencies",
+      "Score Taking Ownership": "Score taking ownership",
+      "Score Collaboration": "Score collaboration"
+    };
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
+    let n;
+    while ((n = walker.nextNode())) {
+      const t = n.nodeValue;
+      if (!t) continue;
+      let out = t;
+      for (const [from,to] of Object.entries(TEXT_MAP)) {
+        if (out.indexOf(from) !== -1) out = out.replaceAll(from, to);
+      }
+      if (out !== t) n.nodeValue = out;
+    }
+  }
+
+  function ensureBeforeRender(){
+    try {
+      normalizeData();
+      replaceOldLabelsIn(document.getElementById('finish'));
+      replaceOldLabelsIn(document.getElementById('pdfReport'));
+    } catch(e) {}
   }
 
   let tries = 0;
   const t = setInterval(() => {
-    if (normalize() || ++tries > 40) clearInterval(t);
+    if (normalizeData() || ++tries > 40) clearInterval(t);
   }, 150);
+
+  ['toQ2','submitAll','congratsPdf'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', ensureBeforeRender, {capture:true});
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    ensureBeforeRender();
+    setTimeout(ensureBeforeRender, 200);
+  });
 })();
 </script>
-<!-- === End shim === -->
+<!-- === End drop-in === -->
+
 </body>
 </html>
