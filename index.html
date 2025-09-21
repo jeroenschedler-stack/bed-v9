@@ -942,6 +942,51 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     // Go to finish page
     show('finish');
   };
+
+  // --- Robust wiring for Submit (permanent fix) ---
+  (function(){
+    function wireSubmit(){
+      try{
+        const btn = document.getElementById('submitAll');
+        if(!btn) return false;
+        // Ensure it's not a form submit by default
+        if(!btn.getAttribute('type')) btn.setAttribute('type','button');
+        // Remove previous to avoid duplicates
+        btn.onclick = null;
+        btn.addEventListener('click', () => {
+          try{
+            const totals = computeTotals();
+            document.getElementById('scorePercent').textContent = 'OVERALL SCORE ' + totals.pct + '%';
+            const gauge = document.getElementById('gauge');
+            if(gauge){ 
+              gauge.style.setProperty('--marker', totals.pct + '%');
+              gauge.style.position = 'relative';
+              let markerStyle = document.getElementById('markerStyle');
+              if (!markerStyle) { markerStyle = document.createElement('style'); markerStyle.id = 'markerStyle'; document.head.appendChild(markerStyle); }
+              markerStyle.textContent = '.gauge::after{left: calc(var(--marker) - 5px);}';
+            }
+            // Render groups and go
+            if(typeof renderGroupResults==='function') renderGroupResults();
+            if(typeof show==='function') show('finish');
+          }catch(e){ console.error('submitAll click error', e); }
+        }, {once:false});
+        return true;
+      }catch(e){ console.error('wireSubmit error', e); return false; }
+    }
+    // Initial try
+    if(!wireSubmit()){
+      // Retry a few times in case dynamic content loads late
+      let tries=0;
+      const t = setInterval(()=>{
+        tries++;
+        if(wireSubmit() || tries>20) clearInterval(t);
+      },150);
+    }
+    // Rewire if the button is replaced dynamically
+    const mo = new MutationObserver(() => wireSubmit());
+    mo.observe(document.body, {childList:true, subtree:true});
+  })();
+  // --- End robust wiring ---
 // Validation
   ['nick','email','hotel','peerName','peerEmail','peerHotel'].forEach(id => {
     el(id).addEventListener('input', validateWelcome);
