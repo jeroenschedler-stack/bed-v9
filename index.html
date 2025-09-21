@@ -1165,5 +1165,36 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
     labelScore.textContent = 'SCORE';
   }
 })();
-</script></body>
+</script>
+
+<!-- === Group rename shim === -->
+<script>
+(function(){
+  const MAP = {
+    "Hospitality Skills": "hospitality skills",
+    "Hospitality Competencies": "BED competencies",
+    "Taking Ownership": "taking ownership",
+    "Collaboration": "collaboration"
+  };
+  const TARGET_ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+
+  function normalize(){
+    const S = window.__S || window.S;
+    if (!S || !Array.isArray(S.groups) || !Array.isArray(S.questions)) return false;
+
+    S.groups.forEach(g => { if (MAP[g.name]) g.name = MAP[g.name]; });
+    S.groups.sort((a,b) => TARGET_ORDER.indexOf(a.name) - TARGET_ORDER.indexOf(b.name));
+    S.questions.forEach(q => { if (MAP[q.group]) q.group = MAP[q.group]; });
+
+    return true;
+  }
+
+  let tries = 0;
+  const t = setInterval(() => {
+    if (normalize() || ++tries > 40) clearInterval(t);
+  }, 150);
+})();
+</script>
+<!-- === End shim === -->
+</body>
 </html>
