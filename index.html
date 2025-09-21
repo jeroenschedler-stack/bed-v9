@@ -1176,7 +1176,6 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
     "Collaboration": "collaboration"
   };
   const TARGET_ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
-
   function normalizeData(){
     const S = window.__S || window.S;
     if (!S || !Array.isArray(S.groups) || !Array.isArray(S.questions)) return false;
@@ -1185,7 +1184,6 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
     S.questions.forEach(q => { if (MAP[q.group]) q.group = MAP[q.group]; });
     return true;
   }
-
   function replaceOldLabelsIn(container){
     if (!container) return;
     const TEXT_MAP = {
@@ -1210,33 +1208,94 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
       if (out !== t) n.nodeValue = out;
     }
   }
-
   function ensureBeforeRender(){
-    try {
-      normalizeData();
+    try { normalizeData();
       replaceOldLabelsIn(document.getElementById('finish'));
       replaceOldLabelsIn(document.getElementById('pdfReport'));
     } catch(e) {}
   }
-
   let tries = 0;
-  const t = setInterval(() => {
-    if (normalizeData() || ++tries > 40) clearInterval(t);
-  }, 150);
-
+  const t = setInterval(() => { if (normalizeData() || ++tries > 40) clearInterval(t); }, 150);
   ['toQ2','submitAll','congratsPdf'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
+    const el = document.getElementById(id); if (!el) return;
     el.addEventListener('click', ensureBeforeRender, {capture:true});
   });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    ensureBeforeRender();
-    setTimeout(ensureBeforeRender, 200);
-  });
+  document.addEventListener('DOMContentLoaded', () => { ensureBeforeRender(); setTimeout(ensureBeforeRender, 200); });
 })();
 </script>
 <!-- === End drop-in === -->
+
+
+<script>
+(function(){
+  // Map old->new
+  const MAP = {
+    "Hospitality Skills": "hospitality skills",
+    "Hospitality Competencies": "BED competencies",
+    "Taking Ownership": "taking ownership",
+    "Collaboration": "collaboration"
+  };
+  const TARGET_ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+
+  function normalizedOrder(S){
+    const byName = new Map();
+    (S.groups||[]).forEach(g => byName.set(g.name, g));
+    // Build using target order but include fallback to any extras
+    const out = [];
+    TARGET_ORDER.forEach(n => { if (byName.has(n)) out.push(n); });
+    (S.groups||[]).forEach(g => { if (!out.includes(g.name)) out.push(g.name); });
+    return out;
+  }
+
+  // Override renderGroupResults
+  const _render = window.renderGroupResults;
+  window.renderGroupResults = function(){
+    const S = window.__S || window.S || {};
+    // Normalize question tags
+    (S.questions||[]).forEach(q => { if (MAP[q.group]) q.group = MAP[q.group]; });
+    // Normalize groups
+    (S.groups||[]).forEach(g => { if (MAP[g.name]) g.name = MAP[g.name]; });
+    const order = normalizedOrder(S);
+    const byPct = (window.computeGroupPercents ? window.computeGroupPercents() : {});
+    const holder = document.getElementById('groupResults');
+    if (!holder) { if (typeof _render==='function') return _render(); else return; }
+    holder.innerHTML = '';
+    order.forEach(name => {
+      const p = (byPct[name] ?? 0);
+      const row = document.createElement('div');
+      row.className = 'group-row';
+      row.innerHTML = '<div class="group-label">'+ name +'</div>'
+        + '<div class="group-bar"><div class="fill" style="width:'+ p +'%"></div></div>'
+        + '<div class="group-pct">'+ p +'%</div>';
+      holder.appendChild(row);
+    });
+  };
+
+  // Override buildPdfReport
+  const _buildPdf = window.buildPdfReport;
+  window.buildPdfReport = function(){
+    const S = window.__S || window.S || {};
+    (S.questions||[]).forEach(q => { if (MAP[q.group]) q.group = MAP[q.group]; });
+    (S.groups||[]).forEach(g => { if (MAP[g.name]) g.name = MAP[g.name]; });
+    const order = normalizedOrder(S);
+    // Call original to lay out the PDF shell first (date, name, totals, etc.)
+    if (typeof _buildPdf === 'function') _buildPdf();
+    // Then replace the SCORE BY GROUP table using our normalized order
+    const table = document.getElementById('pdfGroupTable');
+    if (table){
+      table.innerHTML = '';
+      const byPct = (window.computeGroupPercents ? window.computeGroupPercents() : {});
+      order.forEach(name => {
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td'); td1.textContent = name;
+        const td2 = document.createElement('td'); td2.textContent = (byPct[name] ?? 0) + '%';
+        tr.appendChild(td1); tr.appendChild(td2);
+        table.appendChild(tr);
+      });
+    }
+  };
+})();
+</script>
 
 </body>
 </html>
