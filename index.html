@@ -911,6 +911,37 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   el('backToQ2').onclick = () => show('q2');
   el('nextToPeer').onclick = () => show('congrats');
   el('congratsBack').onclick = () => show('finish');
+
+  // Submit from Q2 -> compute, render, go to finish
+  el('submitAll').onclick = () => {
+    const totals = computeTotals();
+    // Update main score
+    el('scorePercent').textContent = 'OVERALL SCORE ' + totals.pct + '%';
+    // Gauge marker
+    const gauge = el('gauge');
+    gauge.style.setProperty('--marker', totals.pct + '%');
+    gauge.style.position = 'relative';
+    let markerStyle = document.getElementById('markerStyle');
+    if (!markerStyle) {
+      markerStyle = document.createElement('style');
+      markerStyle.id = 'markerStyle';
+      document.head.appendChild(markerStyle);
+    }
+    markerStyle.textContent = '.gauge::after{left: calc(var(--marker) - 5px);}';
+    // Recommendation
+    let rec='';
+    if (totals.pct < 50) rec = 'You are behind and may need more support. Please contact your coach and ask your team members for guidance';
+    else if (totals.pct < 70) rec = 'Focus on self-development. Constant little improvements will already make you better. Ask feedback from friends so you know you improve';
+    else if (totals.pct < 85) rec = 'Great hospitality! Keep challenging yourself and help others by giving them honest and positive feedback';
+    else rec = 'Excellent! Your understanding of BED is an inspiration for others. Continue to lead others by example';
+    document.getElementById('recText').innerHTML =
+      '<h4 style="font-size:11px; font-weight:400; color:#999999; margin-bottom:6px;">our recommendation</h4>' + rec;
+
+    // Group results
+    renderGroupResults();
+    // Go to finish page
+    show('finish');
+  };
 // Validation
   ['nick','email','hotel','peerName','peerEmail','peerHotel'].forEach(id => {
     el(id).addEventListener('input', validateWelcome);
