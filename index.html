@@ -872,12 +872,14 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     holder.innerHTML = rows;
   }
 
-  // Navigation + eligibility modal
+  
+  // Navigation + eligibility modal (replaced for reliability)
   const _eligOkBtn = document.getElementById('eligOk');
   const _eligCancelBtn = document.getElementById('eligCancel');
   function openModal(){ document.getElementById('eligBackdrop').style.display='flex'; }
   function closeModal(){ document.getElementById('eligBackdrop').style.display='none'; }
 
+  // Welcome -> Instructions (with consent modal)
   el('toInstructions').onclick = () => {
     openModal();
     const oldOk = _eligOkBtn.onclick;
@@ -885,37 +887,31 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     _eligOkBtn.onclick = () => { closeModal(); show('instructions'); _eligOkBtn.onclick = oldOk; _eligCancelBtn.onclick = oldCancel; };
     _eligCancelBtn.onclick = () => { closeModal(); _eligOkBtn.onclick = oldOk; _eligCancelBtn.onclick = oldCancel; };
   };
-  el('backToWelcome').onclick = () => show('welcome');
-  el('toQ1').onclick = () => { const l=el('list-q1'); l.innerHTML=''; (S.questions||[]).slice(0,18).forEach((q,i)=>l.appendChild(makeQ(q,i+1))); show('q1'); };
-  el('backToInstructions').onclick = () => show('instructions');
-  el('toQ2').onclick = () => { const l=el('list-q2'); l.innerHTML=''; (S.questions||[]).slice(18,35).forEach((q,i)=>l.appendChild(makeQ(q,19+i))); show('q2'); };
-  el('backToQ1').onclick = () => show('q1');
 
-  el('submitAll').onclick = () => {
-    const totals = computeTotals();
-    el('scorePercent').textContent = 'OVERALL SCORE ' + totals.pct + '%';
-    const gauge = el('gauge');
-    gauge.style.setProperty('--marker', totals.pct + '%'); 
-    gauge.style.position='relative';
-    let markerStyle = document.getElementById('markerStyle'); 
-    if(!markerStyle){ markerStyle=document.createElement('style'); markerStyle.id='markerStyle'; document.head.appendChild(markerStyle);}
-    markerStyle.textContent = '.gauge::after{left: calc(var(--marker) - 5px);}';
-    let rec=''; 
-    if(totals.pct<50) rec='You are behind and may need more support. Please contact your coach and ask your team members for guidance'; 
-else if(totals.pct<70) rec='Focus on self-development. Constant practice will make you better. Ask feedback from friends so you know you improve'; 
-else if(totals.pct<85) rec='Great hospitality! Keep challenging yourself and help others by giving them honest and positive feedback'; 
-else rec='Excellent! Your understanding of BED is an inspiration for others. Continue to lead others by example';
-    document.getElementById('recText').textContent = rec;
-    renderGroupResults();
-    show('finish');
+  // Instructions nav
+  el('backToWelcome').onclick = () => show('welcome');
+  el('toQ1').onclick = () => { 
+    const l = el('list-q1'); 
+    l.innerHTML = '';
+    (S.questions||[]).slice(0,18).forEach((q,i)=> l.appendChild(makeQ(q, i+1)));
+    show('q1'); 
   };
 
+  // Q1 <-> Q2
+  el('backToInstructions').onclick = () => show('instructions');
+  el('toQ2').onclick = () => {
+    const l = el('list-q2');
+    l.innerHTML = '';
+    (S.questions||[]).slice(18,35).forEach((q,i)=> l.appendChild(makeQ(q, 19+i)));
+    show('q2');
+  };
+  el('backToQ1').onclick = () => show('q1');
+
+  // Q2 -> Finish
   el('backToQ2').onclick = () => show('q2');
   el('nextToPeer').onclick = () => show('congrats');
-
   el('congratsBack').onclick = () => show('finish');
-
-  // Validation
+// Validation
   ['nick','email','hotel','peerName','peerEmail','peerHotel'].forEach(id => {
     el(id).addEventListener('input', validateWelcome);
     el(id).addEventListener('change', validateWelcome);
