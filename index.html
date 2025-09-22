@@ -1298,8 +1298,81 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
 </script>
 
 
+<style>
+  /* Final vFinal: scoring page group line layout */
+  .group-line{display:flex; justify-content:space-between; align-items:center; font-weight:600; margin:2px 0;}
+</style>
 <script>
-// === Strong patch v2: force-normalize, recompute group %, and guarantee rendering on score + PDF ===
+// === Final normalization & rendering vFinal ===
+(function(){
+  const MAP = {
+    "Hospitality Skills":"hospitality skills",
+    "Hospitality Competencies":"BED competencies",
+    "Taking Ownership":"taking ownership",
+    "Collaboration":"collaboration"
+  };
+  const ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+
+  function normalizeAll(){
+    const S = window.__S || window.S || {};
+    if (Array.isArray(S.groups)) S.groups.forEach(g=>{ if(MAP[g.name]) g.name = MAP[g.name]; });
+    if (Array.isArray(S.questions)) S.questions.forEach(q=>{ if(MAP[q.group]) q.group = MAP[q.group]; });
+  }
+  function byOrder(names){
+    const seen = new Set(); const out=[];
+    ORDER.forEach(n=>{ if(names.includes(n) && !seen.has(n)) { out.push(n); seen.add(n);} });
+    names.forEach(n=>{ if(!seen.has(n)) out.push(n); });
+    return out;
+  }
+
+  // Replace scoring-page renderer
+  window.renderGroupResults = function(){
+    normalizeAll();
+    const S = window.__S || window.S || {};
+    const holder = document.getElementById('groupResults');
+    if(!holder) return;
+    const pctMap = (window.computeGroupPercents ? window.computeGroupPercents() : {});
+    const descMap = {}; (S.groups||[]).forEach(g => descMap[g.name] = g.description || '');
+    const names = byOrder(Object.keys(descMap));
+    holder.innerHTML = '';
+    names.forEach(name => {
+      const p = pctMap[name] ?? 0;
+      const wrap = document.createElement('div');
+      wrap.className = 'group-row';
+      wrap.innerHTML =
+        '<div class="group-line"><span class="group-name">'+ name +'</span><span class="group-pct">'+ p +'%</span></div>' +
+        '<div class="group-desc">'+ (descMap[name] || '') +'</div>';
+      holder.appendChild(wrap);
+    });
+  };
+
+  // Replace PDF builder (keeps original totals/date/etc. from existing function)
+  const _origBuild = window.buildPdfReport;
+  window.buildPdfReport = function(){
+    normalizeAll();
+    if (typeof _origBuild === 'function') _origBuild(); // lays out date, totals, info, statements
+
+    const S = window.__S || window.S || {};
+    const body = document.getElementById('pdfGroupRows');
+    if(!body) return;
+    // Rebuild the SCORE BY GROUP rows with normalized order and clean labels
+    body.innerHTML = '';
+    const pctMap = (window.computeGroupPercents ? window.computeGroupPercents() : {});
+    const descMap = {}; (S.groups||[]).forEach(g => descMap[g.name] = g.description || '');
+    const names = byOrder(Object.keys(descMap));
+    names.forEach(name => {
+      const tr = document.createElement('tr');
+      const tdName = document.createElement('td'); tdName.textContent = name;
+      const tdPct  = document.createElement('td'); tdPct.textContent  = (pctMap[name] ?? 0) + '%';
+      const tdDesc = document.createElement('td'); tdDesc.textContent = descMap[name] || '';
+      tr.appendChild(tdName); tr.appendChild(tdPct); tr.appendChild(tdDesc);
+      body.appendChild(tr);
+    });
+  };
+})();
+</script>
+<script>
+// === Strong patch v2: force-normalize + recompute group % independent of S.groups ===
 (function(){
   const MAP = {
     "Hospitality Skills":"hospitality skills",
@@ -1315,25 +1388,25 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
     "collaboration":"Building trust, communicating clearly, and helping across the BED community."
   };
 
-  const norm = n => MAP[n] || n;
+  function normName(n){ return MAP[n] || n; }
 
   function ensureNormalized(){
     const S = window.__S || window.S || {};
-    if (Array.isArray(S.questions)) S.questions.forEach(q => { q.group = norm(q.group); });
-    if (Array.isArray(S.groups))   S.groups.forEach(g => { g.name  = norm(g.name);
-                                                            g.description = g.description || DESC_FALLBACK[g.name] || ''; });
+    if (Array.isArray(S.questions)) S.questions.forEach(q => { q.group = normName(q.group); });
+    if (Array.isArray(S.groups))   S.groups.forEach(g => { g.name = normName(g.name); g.description = g.description || DESC_FALLBACK[g.name] || ''; });
   }
 
-  // Override computeGroupPercents to derive from answers directly
+  // Override computeGroupPercents to derive from questions directly
   window.computeGroupPercents = function(){
     ensureNormalized();
     const S = window.__S || window.S || {};
     const buckets = Object.create(null);
     (S.questions||[]).forEach(q => {
-      const g = norm(q.group || '');
+      const g = normName(q.group || '');
       if (!g) return;
       (buckets[g] ||= []).push(parseInt(S.answers[q.id],10) || 0);
     });
+    // Compute BED scale %
     const out = Object.create(null);
     Object.keys(buckets).forEach(g => {
       const vals = buckets[g].filter(v => v>0);
@@ -1348,10 +1421,14 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
     ensureNormalized();
     const S = window.__S || window.S || {};
     const names = new Set();
-    (S.questions||[]).forEach(q => { const m = norm(q.group||''); if(m) names.add(m); });
-    (S.groups||[]).forEach(g => names.add(norm(g.name)));
+    (S.questions||[]).forEach(q => { const n = normName(q.group); if(n) names.add(n); });
+    (S.groups||[]).forEach(g => names.add(normName(g.name)));
     const arr = Array.from(names);
-    const idx = n => { const i = ORDER.indexOf(n); return i === -1 ? 999 : i; };
+    // sort by ORDER
+    const idx = n => {
+      const i = ORDER.indexOf(n);
+      return i === -1 ? 999 : i;
+    };
     return arr.sort((a,b)=>idx(a)-idx(b));
   }
 
@@ -1360,11 +1437,12 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
     const S = window.__S || window.S || {};
     const d = Object.create(null);
     (S.groups||[]).forEach(g => d[g.name] = g.description || DESC_FALLBACK[g.name] || '');
+    // ensure fallbacks
     Object.keys(DESC_FALLBACK).forEach(k => { if(!(k in d)) d[k]=DESC_FALLBACK[k]; });
     return d;
   }
 
-  // Override score page renderer
+  // Override renderers
   window.renderGroupResults = function(){
     ensureNormalized();
     const holder = document.getElementById('groupResults');
@@ -1382,7 +1460,6 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
     });
   };
 
-  // Override PDF builder (rebuild SCORE BY GROUP rows)
   const _origBuild = window.buildPdfReport;
   window.buildPdfReport = function(){
     ensureNormalized();
@@ -1402,13 +1479,16 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
     });
   };
 
-  // Ensure normalization is in place before actions
+  // Ensure our overrides are active BEFORE submitAll runs
   document.addEventListener('DOMContentLoaded', ensureNormalized);
-  ['toQ2','submitAll','congratsPdf'].forEach(id=>{
-    const btn = document.getElementById(id);
-    if (btn) btn.addEventListener('click', ensureNormalized, {capture:true});
-  });
+  // Also prime right before clicking submit
+  const sub = document.getElementById('submitAll');
+  if (sub) sub.addEventListener('click', ensureNormalized, {capture:true});
+  // And right before PDF print
+  const pdf = document.getElementById('congratsPdf');
+  if (pdf) pdf.addEventListener('click', ensureNormalized, {capture:true});
 })();
 </script>
 </body>
 </html>
+
