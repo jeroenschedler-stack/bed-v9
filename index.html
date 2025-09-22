@@ -634,8 +634,9 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <br/>
 <div id="groupResultsContainer" style="margin-top:18px">
 <div class="group-summary">
-<div class="group-results-header group-title" style="font-weight:700;margin-bottom:8px">GROUP RESULTS</div>
-<div id="groupResults"></div>
+<div class="group-results-header group-title" style="font-weight:900;margin-bottom:8px">SCORE BY GROUP</div>
+<br>
+  <div id="groupResults"></div>
 </div>
 </div>
 <div class="actions">
@@ -865,10 +866,10 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     if(!markerStyle){ markerStyle=document.createElement('style'); markerStyle.id='markerStyle'; document.head.appendChild(markerStyle);}
     markerStyle.textContent = '.gauge::after{left: calc(var(--marker) - 5px);}';
     let rec=''; 
-    if(totals.pct<50) rec='You are behind and may need more support. Please contact your coach and ask your team members for guidance'; 
-else if(totals.pct<70) rec='Focus on self-development. Constant practice will make you better. Ask feedback from friends so you know you improve'; 
+    if(totals.pct<50) rec='You are behind and need more support. Please contact your coach and ask your team members for guidance'; 
+else if(totals.pct<70) rec='Focus on developing yourself. Practice makes you better. Ask for honest feedback from your friends so you know what you can do better'; 
 else if(totals.pct<85) rec='Great hospitality! Keep challenging yourself and help others by giving them honest and positive feedback'; 
-else rec='Excellent! Your understanding of BED is an inspiration for others. Continue to lead others by example';
+else rec='Awesome! Your understanding of BED is an inspiration for others. Continue to lead others by example';
     document.getElementById('recText').textContent = rec;
     renderGroupResults();
     show('finish');
