@@ -1373,3 +1373,122 @@ else rec='Excellent! Your understanding of BED is an inspiration for others. Con
 </script>
 </body>
 </html>
+
+<script>
+// === Strong patch v2: force-normalize + recompute group % independent of S.groups ===
+(function(){
+  const MAP = {
+    "Hospitality Skills":"hospitality skills",
+    "Hospitality Competencies":"BED competencies",
+    "Taking Ownership":"taking ownership",
+    "Collaboration":"collaboration"
+  };
+  const ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+  const DESC_FALLBACK = {
+    "hospitality skills":"Practical service actions and daily guest care done the BED way.",
+    "BED competencies":"Reading people and situations; proactive judgement; turning intent into consistent action.",
+    "taking ownership":"Acting independently, fixing problems, and sharing responsibility for outcomes.",
+    "collaboration":"Building trust, communicating clearly, and helping across the BED community."
+  };
+
+  function normName(n){ return MAP[n] || n; }
+
+  function ensureNormalized(){
+    const S = window.__S || window.S || {};
+    if (Array.isArray(S.questions)) S.questions.forEach(q => { q.group = normName(q.group); });
+    if (Array.isArray(S.groups))   S.groups.forEach(g => { g.name = normName(g.name); g.description = g.description || DESC_FALLBACK[g.name] || ''; });
+  }
+
+  // Override computeGroupPercents to derive from questions directly
+  window.computeGroupPercents = function(){
+    ensureNormalized();
+    const S = window.__S || window.S || {};
+    const buckets = Object.create(null);
+    (S.questions||[]).forEach(q => {
+      const g = normName(q.group || '');
+      if (!g) return;
+      (buckets[g] ||= []).push(parseInt(S.answers[q.id],10) || 0);
+    });
+    // Compute BED scale %
+    const out = Object.create(null);
+    Object.keys(buckets).forEach(g => {
+      const vals = buckets[g].filter(v => v>0);
+      if(!vals.length){ out[g]=0; return; }
+      const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+      out[g] = Math.round(25 + ((avg - 1) / 4) * 75);
+    });
+    return out;
+  };
+
+  function orderedNames(){
+    ensureNormalized();
+    const S = window.__S || window.S || {};
+    const names = new Set();
+    (S.questions||[]).forEach(q => { const n = normName(q.group); if(n) names.add(n); });
+    (S.groups||[]).forEach(g => names.add(normName(g.name)));
+    const arr = Array.from(names);
+    // sort by ORDER
+    const idx = n => {
+      const i = ORDER.indexOf(n);
+      return i === -1 ? 999 : i;
+    };
+    return arr.sort((a,b)=>idx(a)-idx(b));
+  }
+
+  function descMap(){
+    ensureNormalized();
+    const S = window.__S || window.S || {};
+    const d = Object.create(null);
+    (S.groups||[]).forEach(g => d[g.name] = g.description || DESC_FALLBACK[g.name] || '');
+    // ensure fallbacks
+    Object.keys(DESC_FALLBACK).forEach(k => { if(!(k in d)) d[k]=DESC_FALLBACK[k]; });
+    return d;
+  }
+
+  // Override renderers
+  window.renderGroupResults = function(){
+    ensureNormalized();
+    const holder = document.getElementById('groupResults');
+    if(!holder) return;
+    const pct = window.computeGroupPercents();
+    const d   = descMap();
+    holder.innerHTML = '';
+    orderedNames().forEach(name => {
+      const p = pct[name] ?? 0;
+      const block = document.createElement('div');
+      block.className = 'group-row';
+      block.innerHTML = '<div style="font-weight:700">'+name+' '+p+'%</div>' +
+                        '<div class="group-desc">'+(d[name]||'')+'</div>';
+      holder.appendChild(block);
+    });
+  };
+
+  const _origBuild = window.buildPdfReport;
+  window.buildPdfReport = function(){
+    ensureNormalized();
+    if (typeof _origBuild === 'function') _origBuild();
+    const body = document.getElementById('pdfGroupRows');
+    if (!body) return;
+    body.innerHTML='';
+    const pct = window.computeGroupPercents();
+    const d   = descMap();
+    orderedNames().forEach(name => {
+      const tr = document.createElement('tr');
+      const td1=document.createElement('td'); td1.textContent=name;
+      const td2=document.createElement('td'); td2.textContent=(pct[name]??0)+'%';
+      const td3=document.createElement('td'); td3.textContent=d[name]||'';
+      tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+      body.appendChild(tr);
+    });
+  };
+
+  // Ensure our overrides are active BEFORE submitAll runs
+  document.addEventListener('DOMContentLoaded', ensureNormalized);
+  // Also prime right before clicking submit
+  const sub = document.getElementById('submitAll');
+  if (sub) sub.addEventListener('click', ensureNormalized, {capture:true});
+  // And right before PDF print
+  const pdf = document.getElementById('congratsPdf');
+  if (pdf) pdf.addEventListener('click', ensureNormalized, {capture:true});
+})();
+</script>
