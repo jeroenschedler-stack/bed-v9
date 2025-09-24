@@ -1642,4 +1642,48 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   }
 })();
 </script>
+<script>
+// === Desktop PDF pre-update (non-blocking) ===
+(function(){
+  const build     = window.buildPdfReport  || function(){};
+  const normalize = window.ensureNormalized || function(){};
+
+  function rebuildBeforePrint(){
+    try { normalize(); } catch(e){}
+    try { build();     } catch(e){}
+  }
+
+  function hook(){
+    const btn = document.getElementById('congratsPdf');
+    if (!btn) return;
+    // No preventDefault, no stopPropagation, no window.print here
+    btn.addEventListener('click', function(){
+      rebuildBeforePrint();   // just prep the DOM
+      // then your original PDF flow continues and calls window.print()
+    }, true);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hook);
+  } else {
+    hook();
+  }
+})();
+</script>
+<script>
+// === PDF pre-print compat wrapper (must be last) ===
+(function(){
+  const normalize = window.ensureNormalized || function(){};
+  const build     = window.buildPdfReport  || function(){};
+  const origPrint = window.print ? window.print.bind(window) : function(){};
+
+  window.print = function(){
+    try { normalize(); } catch(e){}
+    try { build();     } catch(e){}
+    requestAnimationFrame(() => setTimeout(() => {
+      try { origPrint(); } catch(e){}
+    }, 150));
+  };
+})();
+</script>
 
