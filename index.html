@@ -718,21 +718,38 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 
   <div class="pdf-divider"></div>
 
-  <!-- Info section -->
-  <div class="sec-h info-bar"><span>TEAM MEMBER</span><span class="peer-label">PEER REVIEWER</span></div>
-  <div class="info-grid"> ... </div>
-
-  <!-- Overall Score section -->
-  <div class="sec-h assess-bar"><span class="lbl-group">OVERALL SCORE</span></div>
-  <div id="pdfBandText" style="margin-top:6px;font-size:18px;font-weight:600;color:#2F2F2F;width:100%;display:block;text-align:center;line-height:1.4;"></div>
-
-  <!-- Score by Group section -->
-  <div class="sec-h assess-bar"><span class="lbl-group">SCORE BY GROUP</span></div>
-  <div class="card" style="padding:0">
-    <table>
-      <tbody id="pdfGroupRows"><!-- rows injected --></tbody>
-    </table>
+ <!-- Info section -->
+<div class="sec-h info-bar"><span>TEAM MEMBER</span><span class="peer-label">PEER REVIEWER</span></div>
+<div class="info-grid">
+  <div>
+    <div class="sub-h">PERSONAL INFORMATION</div>
+    <div class="card fields">
+      <label>Employee name</label><div id="pdfEmpName"></div>
+      <label>Email address</label><div id="pdfEmpEmail"></div>
+      <label>Location</label><div id="pdfEmpHotel"></div>
+    </div>
   </div>
+  <div>
+    <div class="sub-h">PEER INFORMATION</div>
+    <div class="card fields">
+      <label>Peer name</label><div id="pdfPeerName"></div>
+      <label>Email address</label><div id="pdfPeerEmail"></div>
+      <label>Location</label><div id="pdfPeerHotel"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Overall Score section -->
+<div class="sec-h assess-bar"><span class="lbl-group">OVERALL SCORE</span></div>
+<div id="pdfBandText" style="margin-top:6px;font-size:18px;font-weight:600;color:#2F2F2F;width:100%;display:block;text-align:center;line-height:1.4;"></div>
+
+<!-- Score by Group section -->
+<div class="sec-h assess-bar"><span class="lbl-group">SCORE BY GROUP</span></div>
+<div class="card" style="padding:0">
+  <table>
+    <tbody id="pdfGroupRows"><!-- rows injected --></tbody>
+  </table>
+</div>
 
   <!-- Statements -->
   <div class="sec-h statements-bar"><span class="lbl-stmt">STATEMENTS</span><span class="lbl-group">GROUP</span><span class="lbl-score">SCORE</span></div>
