@@ -704,66 +704,44 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </div>
 <!-- PRINT REPORT (Blue-branded) -->
 <section aria-hidden="true" id="pdfReport">
-<div class="pdf-top">
-<div>
-<div class="pdf-title">BED HOSPITALITY 3.0</div>
-<div class="pdf-sub" style="font-size:22px;">Team Member Self-Assessment</div>
-<div class="pdf-date" id="pdfDate">Report Date —</div>
-<div style="background:#1E90FF; color:#fff; font-size:14px; font-weight:600; padding:4px 8px; margin-top:12px; text-transform:uppercase;">
-  OVERALL SCORE
-</div>
-<div class="sec-h assess-bar"><span class="lbl-group">OVERALL SCORE</span></div>
-<div id="pdfBandText" style="margin-top:6px; font-size:18px; font-weight:600; color:#2F2F2F; text-align:center; width:100%; line-height:1.4;"></div>
-</div>
-<div class="score-box">
-<div class="pct" id="pdfTotalPct">—%</div>
-<div class="raw" id="pdfTotalRaw">— OUT OF 175 POINTS</div>
-</div>
-</div>
-<div class="pdf-divider"></div>
-<div class="sec-h info-bar"><span>TEAM MEMBER</span><span class="peer-label">PEER REVIEWER</span></div>
-<div class="info-grid">
-<div>
-<div class="sub-h">PERSONAL INFORMATION</div>
-<div class="card fields">
-<label>Employee name</label><div id="pdfEmpName"></div>
-<label>Email address</label><div id="pdfEmpEmail"></div>
-<label>Location</label><div id="pdfEmpHotel"></div>
-</div>
-</div>
-<div>
-<div class="sub-h">PEER INFORMATION</div>
-<div class="card fields">
-<label>Peer name</label><div id="pdfPeerName"></div>
-<label>Email address</label><div id="pdfPeerEmail"></div>
-<label>Location</label><div id="pdfPeerHotel"></div>
-</div>
-</div>
-</div>
-<div class="sec-h assess-bar"><span class="lbl-group">SCORE BY GROUP</span></div>
-<div class="card" style="padding:0">
-<table>
-<tbody id="pdfGroupRows">
-<!-- rows injected -->
-</tbody>
-</table>
-</div>
-<div class="sec-h statements-bar"><span class="lbl-stmt">STATEMENTS</span><span class="lbl-group">GROUP</span><span class="lbl-score">SCORE</span></div>
-<div class="card" style="padding:0">
-<table id="pdfStatements">
-<thead>
-<tr>
-<th class="st-no">NO.</th>
-<th>STATEMENT</th>
-<th class="st-group">GROUP</th>
-<th class="st-rating">RATING</th>
-</tr>
-</thead>
-<tbody>
-<!-- rows injected -->
-</tbody>
-</table>
-</div>
+  <div class="pdf-top">
+    <div>
+      <div class="pdf-title">BED HOSPITALITY 3.0</div>
+      <div class="pdf-sub" style="font-size:22px;">Team Member Self-Assessment</div>
+      <div class="pdf-date" id="pdfDate">Report Date —</div>
+    </div>
+    <div class="score-box">
+      <div class="pct" id="pdfTotalPct">—%</div>
+      <div class="raw" id="pdfTotalRaw">— OUT OF 175 POINTS</div>
+    </div>
+  </div>
+
+  <div class="pdf-divider"></div>
+
+  <!-- Info section -->
+  <div class="sec-h info-bar"><span>TEAM MEMBER</span><span class="peer-label">PEER REVIEWER</span></div>
+  <div class="info-grid"> ... </div>
+
+  <!-- Overall Score section -->
+  <div class="sec-h assess-bar"><span class="lbl-group">OVERALL SCORE</span></div>
+  <div id="pdfBandText" style="margin-top:6px;font-size:18px;font-weight:600;color:#2F2F2F;width:100%;display:block;text-align:center;line-height:1.4;"></div>
+
+  <!-- Score by Group section -->
+  <div class="sec-h assess-bar"><span class="lbl-group">SCORE BY GROUP</span></div>
+  <div class="card" style="padding:0">
+    <table>
+      <tbody id="pdfGroupRows"><!-- rows injected --></tbody>
+    </table>
+  </div>
+
+  <!-- Statements -->
+  <div class="sec-h statements-bar"><span class="lbl-stmt">STATEMENTS</span><span class="lbl-group">GROUP</span><span class="lbl-score">SCORE</span></div>
+  <div class="card" style="padding:0">
+    <table id="pdfStatements">
+      <thead> ... </thead>
+      <tbody><!-- rows injected --></tbody>
+    </table>
+  </div>
 </section>
 <script>
 (function(){
