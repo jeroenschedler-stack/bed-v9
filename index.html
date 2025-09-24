@@ -16,8 +16,47 @@
 #pdfReport #pdfInfoTable col:nth-child(4) { width:30%; }
 #pdfReport #pdfInfoTable td { padding:8px 8px; font-size:12px; vertical-align:middle; text-align:left; }
 
+/* === FINAL consolidated fixes === */
+
+/* Screen (non-print) — keep Info table aligned on screen too */
+#pdfReport #pdfInfoTable { table-layout:fixed; width:100%; }
+#pdfReport #pdfInfoTable col:nth-child(1) { width:20%; }
+#pdfReport #pdfInfoTable col:nth-child(2) { width:30%; }
+#pdfReport #pdfInfoTable col:nth-child(3) { width:20%; }
+#pdfReport #pdfInfoTable col:nth-child(4) { width:30%; }
+#pdfReport #pdfInfoTable td { padding:8px 8px; font-size:12px; vertical-align:middle; text-align:left; }
+
+/* === Page-1 screen layout === */
+#welcome { padding:20px 22px; }
+#steps .dot { background:#D0D0D0; }
+#steps .dot.on { background:#E53935 !important; }
+
 /* Print — tables reset + blue separators + Info table widths + your fixes */
 @media print {
+  /* Phase A — Side borders removal (print only) */
+  #pdfReport .card { border:0 !important; box-shadow:none !important; }
+  #pdfReport table { border:0 !important; border-left:0 !important; border-right:0 !important; border-top:0 !important; border-bottom:0 !important; border-collapse:collapse !important; }
+  #pdfReport th, #pdfReport td { border-left:0 !important; border-right:0 !important; }
+  #pdfReport td { border-bottom:0.5px solid #87CEFA !important; }
+  #pdfReport tr:last-child td { border-bottom:none !important; }
+
+  /* Info section column widths (print) */
+  #pdfReport #pdfInfoTable { table-layout:fixed; width:100%; }
+  #pdfReport #pdfInfoTable col:nth-child(1) { width:20%; }
+  #pdfReport #pdfInfoTable col:nth-child(2) { width:30%; }
+  #pdfReport #pdfInfoTable col:nth-child(3) { width:20%; }
+  #pdfReport #pdfInfoTable col:nth-child(4) { width:30%; }
+  #pdfReport #pdfInfoTable td { padding:8px 8px !important; font-size:12px !important; vertical-align:middle !important; text-align:left !important; }
+
+  /* --- Score by Group rows --- */
+  #pdfReport #pdfGroupRows td { padding:8px 8px !important; vertical-align:middle !important; font-size:12px !important; text-align:left !important; }
+
+  /* --- STATEMENTS header bar alignment --- */
+  #pdfReport .statements-bar { display:grid !important; grid-template-columns:10% 45% 30% 15% !important; align-items:center !important; padding:6px 10px !important; }
+  #pdfReport .statements-bar .lbl-stmt { grid-column:1 / span 2 !important; justify-self:start !important; text-align:left !important; }
+  #pdfReport .statements-bar .lbl-group { grid-column:3 !important; justify-self:start !important; text-align:left !important; }
+  #pdfReport .statements-bar .lbl-score { grid-column:4 !important; justify-self:center !important; text-align:center !important; }
+}
 
   /* Phase A — Side borders removal (print only) */
   #pdfReport .card { border:0 !important; box-shadow:none !important; }
