@@ -655,10 +655,11 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
       self-assessment<br>completed
     </h3>
     <p style="font-size:18px; color:#374151">
-      Click PDF to download the full report.<br>
-      Please send a copy to the team member.
+      Click PDF to download the report.<br>
+      Send a copy to the team member.
     </p>
   </div>
+  <br>
   <br>
   <br>
 <div class="page-actions" 
@@ -869,7 +870,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 
   el('submitAll').onclick = () => {
     const totals = computeTotals();
-    el('scorePercent').textContent = 'OVERALL SCORE = ' + totals.pct + '%';
+    el('scorePercent').textContent = 'OVERALL SCORE ' + totals.pct + '%';
     const gauge = el('gauge');
     gauge.style.setProperty('--marker', totals.pct + '%'); 
     gauge.style.position='relative';
