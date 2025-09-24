@@ -213,30 +213,14 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
       padding:12px 14px;
       text-align:center;
     }
-    .score-box .label{font-size:18px; font-weight:600; letter-spacing:.5px}
     .score-box .pct{font-size:36px; font-weight:800; margin:2px 0 2px 0}
-    .score-box .raw{font-size:18px; font-weight:800; opacity:.95}
+    .score-box .raw { font-size:18px; font-weight:800; opacity:.95; margin-bottom:12px; }
 
-    /* ====== SECTION HEADERS (SAFE TO EDIT) ====== */
-    .sec-h{
-      background:var(--blue) !important;     /* Safe: section band color */
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-      color:#fff !important;
-      font-weight:800;
-      text-transform:uppercase;
-      padding:6px 10px;
-      border-radius:4px;
-      margin:16px 0 8px 0
-    }
-
-    /* Cards / fields */
-    .info-grid{display:grid; grid-template-columns: 1fr 1fr; gap:14px}
-    .card{border:1px solid #d1d5db; border-radius:6px; padding:10px 12px}
-    .sub-h{font-weight:800; color:#000; margin:0 0 6px 0; text-transform:uppercase}
-    .fields{display:grid; grid-template-columns: 160px 1fr; column-gap:10px; row-gap:6px; font-size:12px}
-    .fields label{font-weight:700}
-
+/* ====== SECTION HEADERS (SAFE TO EDIT) ====== */
+.sec-h { background:var(--blue) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; color:#fff !important; font-weight:800; text-transform:uppercase; padding:6px 10px; border-radius:4px; margin:16px 0 8px 0; }
+.pdf-top { display:grid; grid-template-columns: 1fr 180px; gap:16px; align-items:start; margin-bottom:10px; }
+.pdf-title { font-size:34px; font-weight:900; color:var(--blue); margin:0; }
+   
     /* ====== TABLE HEADERS (SAFE TO EDIT) ====== */
     table{width:100%; border-collapse:collapse}
     th{
