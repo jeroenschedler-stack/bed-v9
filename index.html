@@ -1628,23 +1628,95 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
 })();
 </script>
 <script>
-(function(){
-  function formatDateDDMMMYYYY(d=new Date()){
-    const mon = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    const dd  = String(d.getDate()).padStart(2,'0');
-    return `${dd} ${mon[d.getMonth()]} ${d.getFullYear()}`;
+(function () {
+  // --- helpers ---
+  function fmtDate(d = new Date()) {
+    const m = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${dd} ${m[d.getMonth()]} ${d.getFullYear()}`; // DD MMM YYYY
   }
 
-  const _origBuild = window.buildPdfReport;
-  window.buildPdfReport = function(){
-    if (typeof _origBuild === 'function') _origBuild();
+  function setDateOnly() {
+    const el = document.getElementById("pdfDate") || document.querySelector("#pdfDate");
+    if (!el) return;
+    el.textContent = fmtDate();
 
-    // Date only (no band text under the date)
-    const dateEl = document.getElementById('pdfDate');
-    if (dateEl) dateEl.textContent = 'Report Date ' + formatDateDDMMMYYYY();
+    // Clear any leftover text next to/below the date area (previous recommendation, etc.)
+    const sib = el.nextElementSibling;
+    if (sib) sib.textContent = "";
+    if (el.nextSibling && el.nextSibling.nodeType === Node.TEXT_NODE) {
+      el.nextSibling.nodeValue = "";
+    }
+  }
+
+  function getOverallPct() {
+    try {
+      if (typeof window.computeTotals === "function") {
+        const t = window.computeTotals();
+        if (t && typeof t.pct === "number") return Math.round(t.pct);
+      }
+    } catch (_) {}
+    try {
+      if (typeof window.computeOverallPercent === "function") {
+        const v = window.computeOverallPercent();
+        if (!isNaN(v)) return Math.round(v);
+      }
+    } catch (_) {}
+    const sp = document.getElementById("scorePercent");
+    if (sp) {
+      const m = sp.textContent.match(/(\d+)\s*%/);
+      if (m) return parseInt(m[1], 10);
+    }
+    return 0;
+  }
+
+  // Your 4 preset bands
+  function recFor(p) {
+    if (p < 50)
+      return "You are behind and need more support. Please contact your coach and ask your team members for guidance";
+    if (p < 70)
+      return "Focus on developing yourself. Practice makes you better. Ask for honest feedback from your friends so you know what you can do better";
+    if (p < 85)
+      return "Great hospitality! Keep challenging yourself and help others by giving them honest and positive feedback";
+    return "Awesome! Your understanding of BED is an inspiration for others. Continue to lead others by example";
+  }
+
+  function addOverallRow() {
+    const tbody =
+      document.getElementById("pdfGroupRows") ||
+      document.querySelector("#pdfGroupRows") ||
+      document.querySelector("#pdfGroupRows tbody");
+    if (!tbody) return;
+
+    // Avoid duplicates on reprint
+    if (tbody.querySelector('tr[data-overall-row="1"]')) return;
+
+    const overall = getOverallPct();
+    const rec = recFor(overall);
+
+    const tr = document.createElement("tr");
+    tr.setAttribute("data-overall-row", "1");
+    const td1 = document.createElement("td"); td1.textContent = "Overall score";
+    const td2 = document.createElement("td"); td2.textContent = `${overall}%`;
+    const td3 = document.createElement("td"); td3.textContent = rec;
+
+    tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+
+    if (tbody.firstChild) tbody.insertBefore(tr, tbody.firstChild);
+    else tbody.appendChild(tr);
+  }
+
+  // --- unified override ---
+  const _orig = window.buildPdfReport;
+  window.buildPdfReport = function () {
+    // run original logic
+    if (typeof _orig === "function") _orig();
+
+    // enforce "date-only" header
+    setDateOnly();
+
+    // insert the Overall row AFTER any table rebuilds
+    setTimeout(addOverallRow, 0);
   };
 })();
 </script>
-
-
-
