@@ -706,10 +706,9 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <section aria-hidden="true" id="pdfReport">
 <div class="pdf-top">
 <div>
-<div class="pdf-title">BED HOSPITALITY 3.0</div>
-<div class="pdf-sub" style="font-size:22px;">Team Member Self-Assessment</div>
+<div class="pdf-title">BED HOSPITALITY 2.0</div>
+<div class="pdf-sub" style="font-size:24px;">Team Member Self-Assessment</div>
 <div class="pdf-date" id="pdfDate">Report Date —</div>
-<div id="pdfBandText" style="margin-top:6px; font-size:12px; color:#666;"></div>
 </div>
 <div class="score-box">
 <div class="pct" id="pdfTotalPct">—%</div>
@@ -1630,48 +1629,22 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
 </script>
 <script>
 (function(){
-  // Date format: DD MMM YYYY (e.g., 24 Sep 2025)
   function formatDateDDMMMYYYY(d=new Date()){
     const mon = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const dd  = String(d.getDate()).padStart(2,'0');
     return `${dd} ${mon[d.getMonth()]} ${d.getFullYear()}`;
   }
 
-  // --- Keep PDF band text identical to on-screen recommendation (#recText) ---
-  // Track the current recommendation text as your app sets it on submitAll.
-  (function trackRecText(){
-    const el = document.getElementById('recText');
-    if (!el) return;
-    // Save the current value immediately
-    window.__REC = (el.innerText || el.textContent || '').trim();
-    // Watch for any updates your code makes later
-    const obs = new MutationObserver(()=>{
-      window.__REC = (el.innerText || el.textContent || '').trim();
-    });
-    obs.observe(el, { childList:true, subtree:true, characterData:true });
-  })();
-
-  // Wrap buildPdfReport so we can set date + band text
   const _origBuild = window.buildPdfReport;
   window.buildPdfReport = function(){
     if (typeof _origBuild === 'function') _origBuild();
 
-    // 1) Set the date
+    // Date only (no band text under the date)
     const dateEl = document.getElementById('pdfDate');
     if (dateEl) dateEl.textContent = 'Report Date ' + formatDateDDMMMYYYY();
-
-    // 2) Inject the EXACT same band text used on screen
-    const dest = document.getElementById('pdfBandText');
-    if (dest) {
-      let t = (window.__REC || '').trim();
-      if (!t) { // fallback: read #recText directly if needed
-        const src = document.getElementById('recText');
-        if (src) t = (src.innerText || src.textContent || '').trim();
-      }
-      dest.textContent = t;
-    }
   };
 })();
 </script>
+
 
 
