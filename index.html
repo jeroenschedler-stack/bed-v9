@@ -1527,45 +1527,35 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   if (pdf) pdf.addEventListener('click', ensureNormalized, {capture:true});
 })();
 </script>
-<!-- FINAL: Desktop-safe popup print -->
+<!-- Desktop-safe same-window print mode -->
+<style>
+  .print-mode #pdfReport { display:block !important; }
+  .print-mode main, .print-mode .modal-backdrop { display:none !important; }
+</style>
 <script>
 (function () {
   const btn = document.getElementById('congratsPdf');
   if (!btn) return;
 
-  btn.onclick = () => {
-    buildPdfReport();
+  function exitPrintMode() {
+    document.documentElement.classList.remove('print-mode');
+  }
+  if ('onafterprint' in window) {
+    window.addEventListener('afterprint', () => setTimeout(exitPrintMode, 50));
+  }
 
-    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-      .map(n => n.outerHTML).join('\n');
-
-    const report = document.getElementById('pdfReport');
-    const html = report ? report.outerHTML : '<div>PDF error</div>';
-
-    const w = window.open('', '_blank', 'noopener,noreferrer');
-    if (!w) { alert('Popup blocked. Please allow popups and try again.'); return; }
-
-    w.document.open();
-    w.document.write(`<!doctype html>
-<html><head><meta charset="utf-8">
-${styles}
-<style>
-  #pdfReport { display:block !important; font-family:Arial, Helvetica, sans-serif; }
-  @page { size: A4; margin: 15mm; }
-  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
-</style>
-</head><body>
-${html}
-<script>
-  window.addEventListener('load', function(){
-    setTimeout(function(){ window.print(); window.close(); }, 100);
-  });
-<\/script>
-</body></html>`);
-    w.document.close();
+  btn.onclick = async () => {
+    if (typeof buildPdfReport === 'function') buildPdfReport();
+    document.documentElement.classList.add('print-mode');
+    const rep = document.getElementById('pdfReport');
+    if (rep) rep.getBoundingClientRect();
+    await new Promise(requestAnimationFrame);
+    window.print();
+    setTimeout(exitPrintMode, 500);
   };
 })();
 </script>
+
 </body>
 </html>
 
