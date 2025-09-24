@@ -8,27 +8,6 @@
 <style>
 /* === FINAL consolidated fixes === */
 @media print {
-  /* --- Information section rows --- */
-  #pdfReport .info-grid .fields {
-    display: grid !important;
-    grid-template-columns: max-content 1fr !important;
-    border-top: 0.5px solid #1E90FF !important;
-  }
-  #pdfReport .info-grid .fields label,
-  #pdfReport .info-grid .fields > div {
-    display: flex !important;
-    align-items: center !important;
-    padding: 8px 8px !important;
-    font-size: 12px !important;
-    line-height: 1.35 !important;
-    border-bottom: 0.5px solid #1E90FF !important;
-    font-weight: 400 !important; /* remove bold */
-  }
-  #pdfReport .info-grid .fields label:nth-last-child(2),
-  #pdfReport .info-grid .fields > div:last-child {
-    border-bottom: none !important;
-  }
-
   /* --- Score by Group rows --- */
   #pdfReport #pdfGroupRows td {
     padding: 8px 8px !important;
@@ -306,67 +285,6 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   @page {
     size: A4;
     margin: 15mm;
-  }
-}
-
-/* PDF: dual header for personal/peer information */
-@media print {
-  #pdfReport .info-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  #pdfReport .info-bar span { flex: 1; }
-  #pdfReport .info-bar .peer-label { text-align: right; }
-}
-
-/* PDF: align PERSONAL/PEER headers exactly over their columns */
-@media print {
-  #pdfReport .info-bar {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr; /* two equal columns to match info grid */
-    justify-content: initial !important;
-    align-items: center;
-  }
-  #pdfReport .info-bar span {
-    text-align: left !important;
-  }
-  #pdfReport .info-bar .peer-label {
-    justify-self: start; /* left-align in its grid cell */
-    margin-left: 0;
-    padding-left: 0;
-  }
-}
-
-/* PDF: remove duplicated sub-headers beneath the PERSONAL/PEER blue bar */
-@media print {
-  /* Hide the small 'Personal Information' / 'Peer Information' labels inside the cards */
-  #pdfReport .info-grid .sub-h { display: none !important; }
-  /* Optional: tighten spacing now that sub-headers are gone */
-  #pdfReport .info-grid .card { padding-top: 8px; }
-}
-
-/* PDF: add horizontal blue lines inside the Personal/Peer info cards */
-@media print {
-  /* Apply thin light-blue separators to each row-like child within the info cards */
-  #pdfReport .info-grid .card > * {
-    border-bottom: 0.5px solid #87CEFA !important;
-  }
-  #pdfReport .info-grid .card > *:last-child {
-    border-bottom: none !important;
-  }
-  /* In case rows are wrapped in <p> or <div> inside a wrapper, cover common row classes */
-  #pdfReport .info-grid .card .row,
-  #pdfReport .info-grid .card .kv,
-  #pdfReport .info-grid .card .kv-row,
-  #pdfReport .info-grid .card p {
-    border-bottom: 0.5px solid #87CEFA !important;
-  }
-  #pdfReport .info-grid .card .row:last-child,
-  #pdfReport .info-grid .card .kv:last-child,
-  #pdfReport .info-grid .card .kv-row:last-child,
-  #pdfReport .info-grid .card p:last-child {
-    border-bottom: none !important;
   }
 }
 
