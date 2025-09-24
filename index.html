@@ -1527,124 +1527,45 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   if (pdf) pdf.addEventListener('click', ensureNormalized, {capture:true});
 })();
 </script>
-</body>
-</html>
+<!-- FINAL: Desktop-safe popup print -->
 <script>
-// === Final hot-fix v3 (must be the last script) ===
-(function(){
-  const MAP = {
-    "Hospitality Skills":"hospitality skills",
-    "Hospitality Competencies":"BED competencies",
-    "Taking Ownership":"taking ownership",
-    "Collaboration":"collaboration"
-  };
-  const ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
-  const DESC = {
-    "hospitality skills":"Practical service actions and daily guest care done the BED way.",
-    "BED competencies":"Reading people and situations; proactive judgement; turning intent into consistent action.",
-    "taking ownership":"Acting independently, fixing problems, and sharing responsibility for outcomes.",
-    "collaboration":"Building trust, communicating clearly, and helping across the BED community."
-  };
-  const norm = n => MAP[n] || n;
-
-  function S(){ return (window.__S || window.S || {}); }
-
-  function ensureNormalized(){
-    const s = S();
-    if (Array.isArray(s.questions)) s.questions.forEach(q => q.group = norm(q.group||""));
-    if (Array.isArray(s.groups))   s.groups.forEach(g => {
-      g.name = norm(g.name||"");
-      g.description = g.description || DESC[g.name] || "";
-    });
-  }
-
-  function computeGroupPercents(){
-    ensureNormalized();
-    const s = S(), buckets = {};
-    (s.questions||[]).forEach(q=>{
-      const g = norm(q.group||""); if(!g) return;
-      (buckets[g] ||= []).push(parseInt((s.answers||{})[q.id],10) || 0);
-    });
-    const out = {};
-    Object.keys(buckets).forEach(g=>{
-      const vals = buckets[g].filter(v=>v>0);
-      out[g] = vals.length ? Math.round(25 + ((vals.reduce((a,b)=>a+b,0)/vals.length - 1)/4)*75) : 0;
-    });
-    return out;
-  }
-
-  function orderedNames(){
-    const names = new Set();
-    (S().questions||[]).forEach(q=>{ const n = norm(q.group); if(n) names.add(n); });
-    (S().groups||[]).forEach(g=>names.add(norm(g.name)));
-    const arr = Array.from(names);
-    return arr.sort((a,b)=> (ORDER.indexOf(a)+1||999) - (ORDER.indexOf(b)+1||999));
-  }
-
-  // --- FORCE our renderers (overwrite anything defined earlier)
-  window.renderGroupResults = function(){
-    ensureNormalized();
-    const holder = document.getElementById('groupResults');
-    if(!holder) return;
-    const pct = computeGroupPercents();
-    const desc = {}; (S().groups||[]).forEach(g=>desc[g.name]=g.description||DESC[g.name]||"");
-    holder.innerHTML = "";
-    orderedNames().forEach(name=>{
-      const p = pct[name] ?? 0;
-      const wrap = document.createElement('div');
-      wrap.className = 'group-row';
-      wrap.innerHTML = '<div style="font-weight:700">'+name+' '+p+'%</div>'
-                     + '<div class="group-desc">'+(desc[name]||'')+'</div>';
-      holder.appendChild(wrap);
-    });
-  };
-
-  const _build = window.buildPdfReport;
-  window.buildPdfReport = function(){
-    ensureNormalized();
-    if (typeof _build === 'function') _build();
-    const body = document.getElementById('pdfGroupRows');
-    if(!body) return;
-    body.innerHTML = '';
-    const pct = computeGroupPercents();
-    const desc = {}; (S().groups||[]).forEach(g=>desc[g.name]=g.description||DESC[g.name]||"");
-    orderedNames().forEach(name=>{
-      const tr=document.createElement('tr');
-      const td1=document.createElement('td'); td1.textContent=name;
-      const td2=document.createElement('td'); td2.textContent=(pct[name]??0)+'%';
-      const td3=document.createElement('td'); td3.textContent=desc[name]||'';
-      tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
-      body.appendChild(tr);
-    });
-  };
-
-  // Re-normalize and re-render at the exact moments that matter
-  window.addEventListener('load', ensureNormalized);
-  document.addEventListener('click', function(ev){
-    if (ev.target && ev.target.id === 'submitAll') {
-      ensureNormalized();
-      setTimeout(window.renderGroupResults, 0);
-    }
-    if (ev.target && ev.target.id === 'congratsPdf') {
-      ensureNormalized();
-      setTimeout(window.buildPdfReport, 0);
-    }
-  }, true);
-})();
-</script>
-<script>
-// Desktop print timing fix: wait for DOM to paint before printing
-(function(){
+(function () {
   const btn = document.getElementById('congratsPdf');
   if (!btn) return;
-  btn.onclick = async () => {
-    buildPdfReport();                 // inject all PDF data
-    const rep = document.getElementById('pdfReport');
-    if (rep) { void rep.offsetHeight; } // force reflow
-    await new Promise(requestAnimationFrame); // next frame
-    await new Promise(r => setTimeout(r, 50)); // tiny buffer for desktop
-    window.print();                   // now snapshot is complete
+
+  btn.onclick = () => {
+    buildPdfReport();
+
+    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
+      .map(n => n.outerHTML).join('\n');
+
+    const report = document.getElementById('pdfReport');
+    const html = report ? report.outerHTML : '<div>PDF error</div>';
+
+    const w = window.open('', '_blank', 'noopener,noreferrer');
+    if (!w) { alert('Popup blocked. Please allow popups and try again.'); return; }
+
+    w.document.open();
+    w.document.write(`<!doctype html>
+<html><head><meta charset="utf-8">
+${styles}
+<style>
+  #pdfReport { display:block !important; font-family:Arial, Helvetica, sans-serif; }
+  @page { size: A4; margin: 15mm; }
+  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style>
+</head><body>
+${html}
+<script>
+  window.addEventListener('load', function(){
+    setTimeout(function(){ window.print(); window.close(); }, 100);
+  });
+<\/script>
+</body></html>`);
+    w.document.close();
   };
 })();
 </script>
+</body>
+</html>
 
