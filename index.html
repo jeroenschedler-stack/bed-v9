@@ -452,7 +452,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     display: none !important;
   }
 }
-<style>
+
 /* PDF: Information section row vertical centering and remove bold labels */
 @media print {
   /* Vertically center each row in the Personal/Peer cards */
@@ -470,63 +470,39 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   #pdfReport .info-grid .card .kv-label strong {
     font-weight: 400 !important;
   }
+}
 </style>
 <script id="embeddedQuestions" type="application/json">[]</script>
 <style>
-/* === Hard-left alignment overrides (PRINT) === */
+/* === FINAL fixes v68: Statements duplicate header removal + header alignment (print only) === */
 @media print {
-  /* Info cards: kill inner padding + make labels tight-left */
-  #pdfReport .info-grid .card {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  /* Replace the 40% / 60% grid with tight label + flexible value */
-  #pdfReport .info-grid .card,
-  #pdfReport .info-grid .fields {
-    grid-template-columns: max-content 1fr !important;
-    column-gap: 8px !important;
-  }
-  #pdfReport .info-grid .fields label,
-  #pdfReport .info-grid .fields div {
-    text-align: left !important;
-    justify-self: start !important;
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-  }
+  /* Lock one set of column widths for statements table */
+  #pdfReport #pdfStatements { table-layout: fixed; width: 100%; }
+  #pdfReport #pdfStatements col:nth-child(1) { width: 10% !important; }
+  #pdfReport #pdfStatements col:nth-child(2) { width: 45% !important; }
+  #pdfReport #pdfStatements col:nth-child(3) { width: 30% !important; }
+  #pdfReport #pdfStatements col:nth-child(4) { width: 15% !important; }
 
-  /* Score by Group: remove left padding so text starts at the edge */
-  #pdfReport #pdfGroupRows td {
-    text-align: left !important;
-    padding-left: 0 !important;
+  /* Align blue header bar labels with table columns */
+  #pdfReport .statements-bar {
+    display: grid !important;
+    grid-template-columns: 10% 45% 30% 15% !important; /* NO / STATEMENT / GROUP / RATING */
+    column-gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
-  /* Global tables in PDF: remove default 8px padding if you want absolute flush */
-  #pdfReport table td { padding-left: 0 !important; }
-}
+  #pdfReport .statements-bar .lbl-stmt { grid-column: 2 !important; text-align: left !important; }
+  #pdfReport .statements-bar .lbl-group { grid-column: 3 !important; text-align: left !important; }
+  #pdfReport .statements-bar .lbl-score { grid-column: 4 !important; text-align: center !important; }
 
-/* === Resolve conflicting STATEMENTS bar rules (screen + print) === */
-/* Some earlier block puts .lbl-stmt at column 2; force it to start at the far left */
-#pdfReport .statements-bar {
-  display: grid !important;
-  grid-template-columns: 10% 45% 30% 15% !important; /* NO | STATEMENT | GROUP | SCORE */
-  align-items: center !important;
+  /* Hide the table's header row to avoid duplication under the blue bar */
+  #pdfReport #pdfStatements thead,
+  #pdfReport #pdfStatements thead tr,
+  #pdfReport #pdfStatements thead th {
+    display: none !important;
+  }
 }
-#pdfReport .statements-bar .lbl-stmt {
-  grid-column: 1 / span 2 !important;  /* align with NO column's left edge */
-  justify-self: start !important;
-  text-align: left !important;
-}
-#pdfReport .statements-bar .lbl-group {
-  grid-column: 3 !important;
-  justify-self: start !important;
-  text-align: left !important;
-}
-#pdfReport .statements-bar .lbl-score {
-  grid-column: 4 !important;
-  justify-self: center !important;
-  text-align: center !important;
-}
-</style>
-
+</style><style>
 /* === FINAL fixes v69: Information section row alignment + unbold labels (screen + print) === */
 #pdfReport .info-grid .fields { align-items: center !important; }
 #pdfReport .info-grid .fields label { font-weight: 400 !important; }
@@ -574,27 +550,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   padding: 6px 10px !important; /* same as .sec-h default */
   margin: 16px 0 8px 0 !important;
 }
-</style><style>
-/* === Alignment patch === */
-
-/* Personal/peer info labels + values (Employee name, Email, Location) */
-#pdfReport .info-grid .fields {
-  grid-template-columns: auto 1fr !important; /* shrink labels, values flexible */
-}
-
-#pdfReport .info-grid .fields label,
-#pdfReport .info-grid .fields div {
-  text-align: left !important;
-  justify-self: start !important;
-}
-
-/* Score by Group rows (hospitality skills, BED competencies, etc.) */
-#pdfReport #pdfGroupRows td {
-  text-align: left !important;
-  justify-self: start !important;
-}
-</style>
-</head>
+</style></head>
 <body>
 <main class="container">
 <h1>BED HOSPITALITY 2.0</h1>
