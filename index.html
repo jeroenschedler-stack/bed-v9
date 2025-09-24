@@ -648,20 +648,48 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </div>
 </section>
 <!-- Congrats -->
-<section id="congrats" style="display:none; padding-top:40px;">
-  <div class="big-check"></div>
-  <div class="center">
-    <h3 style="font-size:32px; margin:8px 0 6px 0; color:#373737;">
-      self-assessment<br>completed
-    </h3>
-    <p style="font-size:18px; color:#374151">
-      Click PDF to download the report.<br>
-      Send a copy to the team member.
-    </p>
+<section id="congrats" style="display:none">
+  <br>
+  <br>
+  <br>
+<style>
+.number-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;          /* circle size */
+  height: 28px;
+  border-radius: 50%;   /* makes it round */
+  background-color: #1E90FF; /* same blue as rating scales, adjust if needed */
+  color: #fff;          /* white number */
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;   /* space between circle and text */
+}
+.step {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 18px;
+  color: #374151;
+}
+</style>
+<div class="big-check"></div>
+<div class="center">
+  <h3 style="font-size:34px; margin:8px 0 6px 0; color:#373737;">
+    self-assessment<br>completed
+  </h3>
+  <div class="step">
+    <span class="number-circle">1</span>
+    click PDF to download the full report
   </div>
-  <br>
-  <br>
-  <br>
+  <div class="step">
+    <span class="number-circle">2</span>
+    please send your peer the review form
+    <br>
+    <br>
+  </div>
+</div>
 <div class="page-actions" 
      style="display:flex; gap:14px; justify-content:center; margin-top:10px">
   <button class="btn-secondary btn-wide" id="congratsBack">Back</button>
@@ -870,7 +898,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 
   el('submitAll').onclick = () => {
     const totals = computeTotals();
-    el('scorePercent').textContent = 'OVERALL SCORE ' + totals.pct + '%';
+    el('scorePercent').textContent = 'OVERALL SCORE = ' + totals.pct + '%';
     const gauge = el('gauge');
     gauge.style.setProperty('--marker', totals.pct + '%'); 
     gauge.style.position='relative';
@@ -1502,71 +1530,6 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   if (pdf) pdf.addEventListener('click', ensureNormalized, {capture:true});
 })();
 </script>
-
-<script>
-// === Final PDF Fix: merge group % with full details ===
-(function(){
-  function stripLeadingNumber(t){ return String(t||'').replace(/^\s*\d+\.\s*/, ''); }
-  function ensureNormalized(){
-    const MAP = {
-      "Hospitality Skills":"hospitality skills",
-      "Hospitality Competencies":"BED competencies",
-      "Taking Ownership":"taking ownership",
-      "Collaboration":"collaboration"
-    };
-    const S = window.__S || window.S || {};
-    (S.questions||[]).forEach(q => { if(MAP[q.group]) q.group = MAP[q.group]; });
-    (S.groups||[]).forEach(g => { if(MAP[g.name]) g.name = MAP[g.name]; });
-  }
-  function descMap(){
-    const S = window.__S || window.S || {};
-    const d = {};
-    (S.groups||[]).forEach(g => d[g.name] = g.description || '');
-    return d;
-  }
-  const _origBuild = window.buildPdfReport;
-  window.buildPdfReport = function(){
-    ensureNormalized();
-    if (typeof _origBuild === 'function') _origBuild(); // keeps totals + info
-
-    const S = window.__S || window.S || {};
-
-    // --- Fix SCORE BY GROUP table ---
-    const body = document.getElementById('pdfGroupRows');
-    if (body){
-      body.innerHTML='';
-      const pct = window.computeGroupPercents();
-      const d   = descMap();
-      ["hospitality skills","BED competencies","taking ownership","collaboration"].forEach(name=>{
-        const tr = document.createElement('tr');
-        const td1=document.createElement('td'); td1.textContent=name;
-        const td2=document.createElement('td'); td2.textContent=(pct[name]??0)+'%';
-        const td3=document.createElement('td'); td3.textContent=d[name]||'';
-        tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
-        body.appendChild(tr);
-      });
-    }
-
-    // --- Fix STATEMENTS table ---
-    const tb = document.querySelector('#pdfStatements tbody');
-    if (tb){
-      tb.innerHTML='';
-      (S.questions||[]).forEach((q,i)=>{
-        const tr = document.createElement('tr');
-        const tdNo=document.createElement('td'); tdNo.textContent=i+1;
-        const tdSt=document.createElement('td');
-        tdSt.innerHTML='<div class="st-title">'+stripLeadingNumber(q.statement||'')+'</div>'
-          +(q.subtext?('<div class="muted">'+q.subtext+'</div>'):''); 
-        const tdGp=document.createElement('td'); tdGp.textContent=q.group||'';
-        const tdRt=document.createElement('td'); tdRt.textContent=(S.answers[q.id]??'');
-        tr.appendChild(tdNo); tr.appendChild(tdSt); tr.appendChild(tdGp); tr.appendChild(tdRt);
-        tb.appendChild(tr);
-      });
-    }
-  };
-})();
-</script>
-
 </body>
 </html>
 <script>
@@ -1670,85 +1633,6 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
       setTimeout(window.buildPdfReport, 0);
     }
   }, true);
-})();
-</script>
-<script>
-// === Desktop PDF reliability patch ===
-// Ensures group % + descriptions are updated BEFORE printing (desktop is faster than mobile).
-(function(){
-  const build = window.buildPdfReport || function(){};
-  const normalize = (window.ensureNormalized || function(){}); // present in your hot-fix
-
-  function rebuildThenPrint(){
-    try { normalize(); } catch(e){}
-    try { build(); } catch(e){}
-    // Let the DOM update settle, then print
-    requestAnimationFrame(() => setTimeout(() => {
-      try { window.print(); } catch(e){}
-    }, 150));
-  }
-
-  // Hook the PDF button
-  function hook(){
-    const btn = document.getElementById('congratsPdf');
-    if (!btn) return;
-    btn.addEventListener('click', function(ev){
-      ev.stopPropagation();
-      ev.preventDefault();
-      rebuildThenPrint();
-      return false;
-    }, true);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', hook);
-  } else {
-    hook();
-  }
-})();
-</script>
-<script>
-// === Desktop PDF pre-update (non-blocking) ===
-(function(){
-  const build     = window.buildPdfReport  || function(){};
-  const normalize = window.ensureNormalized || function(){};
-
-  function rebuildBeforePrint(){
-    try { normalize(); } catch(e){}
-    try { build();     } catch(e){}
-  }
-
-  function hook(){
-    const btn = document.getElementById('congratsPdf');
-    if (!btn) return;
-    // No preventDefault, no stopPropagation, no window.print here
-    btn.addEventListener('click', function(){
-      rebuildBeforePrint();   // just prep the DOM
-      // then your original PDF flow continues and calls window.print()
-    }, true);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', hook);
-  } else {
-    hook();
-  }
-})();
-</script>
-<script>
-// === PDF pre-print compat wrapper (must be last) ===
-(function(){
-  const normalize = window.ensureNormalized || function(){};
-  const build     = window.buildPdfReport  || function(){};
-  const origPrint = window.print ? window.print.bind(window) : function(){};
-
-  window.print = function(){
-    try { normalize(); } catch(e){}
-    try { build();     } catch(e){}
-    requestAnimationFrame(() => setTimeout(() => {
-      try { origPrint(); } catch(e){}
-    }, 150));
-  };
 })();
 </script>
 
