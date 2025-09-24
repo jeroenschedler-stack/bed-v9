@@ -679,13 +679,10 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   <h3 style="font-size:34px; margin:8px 0 6px 0; color:#373737;">
     self-assessment<br>completed
   </h3>
-  <div class="step">
-    <span class="number-circle">1</span>
-    click PDF to download the full report
-  </div>
-  <div class="step">
-    <span class="number-circle">2</span>
-    please send your peer the review form
+  <p style="font-size:18px; color:#374151">
+  to download your complete<br>
+  assessment report click PDF
+</p>
     <br>
     <br>
   </div>
@@ -1633,6 +1630,21 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
       setTimeout(window.buildPdfReport, 0);
     }
   }, true);
+})();
+</script>
+<script>
+// Desktop print timing fix: wait for DOM to paint before printing
+(function(){
+  const btn = document.getElementById('congratsPdf');
+  if (!btn) return;
+  btn.onclick = async () => {
+    buildPdfReport();                 // inject all PDF data
+    const rep = document.getElementById('pdfReport');
+    if (rep) { void rep.offsetHeight; } // force reflow
+    await new Promise(requestAnimationFrame); // next frame
+    await new Promise(r => setTimeout(r, 50)); // tiny buffer for desktop
+    window.print();                   // now snapshot is complete
+  };
 })();
 </script>
 
