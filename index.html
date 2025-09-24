@@ -576,7 +576,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </select>
 </div>
 <h2 class="section-title">peer information</h2>
-<p class="intro">after you assess yourself ask one of your friends to review you. this is called peer review. your peer must know you well and worked in BED for at least 12 months</p>
+<p class="intro">after you assess yourself one of your friends will review you. this is called peer review. your peer must know you well and worked in BED for at least 12 months</p>
 <div class="row"><label for="peerName">name peer</label><input id="peerName"/></div>
 <div class="row"><label for="peerEmail">email peer</label><input id="peerEmail" type="email"/></div>
 <div class="row"><label for="peerHotel">peer location</label>
@@ -633,7 +633,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </div>
 </section>
 <!-- Score -->
-<section id="finish" style="display:none"><div class="score-section"><div class="score-kicker">your self assessment results</div><div class="score-big" id="scorePercent">OVERALL SCORE —%</div><div class="gauge" id="gauge"></div><div class="rec-kicker"></div><div class="rec-text" id="recText">—</div></div>
+<section id="finish" style="display:none"><div class="score-section"><div class="score-kicker">your self assessment scores</div><div class="score-big" id="scorePercent">OVERALL SCORE —%</div><div class="gauge" id="gauge"></div><div class="rec-kicker"></div><div class="rec-text" id="recText">—</div></div>
 <br/>
 <div id="groupResultsContainer" style="margin-top:18px">
 <div class="group-summary">
@@ -676,19 +676,12 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </style>
 <div class="big-check"></div>
 <div class="center">
-  <h3 style="font-size:34px; margin:8px 0 6px 0; color:#373737;">
-    self-assessment<br>completed
+  <h3 style="font-size:32px; margin:8px 0 6px 0; color:#373737;">you completed your<br>self-assessment
   </h3>
-  <div class="step">
-    <span class="number-circle">1</span>
-    click PDF to download the full report
-  </div>
-  <div class="step">
-    <span class="number-circle">2</span>
-    please send your peer the review form
-    <br>
-    <br>
-  </div>
+<p style="font-size:18px; color:#374151">Click PDF to download the full report<br>Please send the review form to your peer</p>
+</div>
+  <br>
+  <br>
 </div>
 <div class="page-actions" 
      style="display:flex; gap:14px; justify-content:center; margin-top:10px">
@@ -898,7 +891,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 
   el('submitAll').onclick = () => {
     const totals = computeTotals();
-    el('scorePercent').textContent = 'OVERALL SCORE = ' + totals.pct + '%';
+    el('scorePercent').textContent = 'OVERALL SCORE ' + totals.pct + '%';
     const gauge = el('gauge');
     gauge.style.setProperty('--marker', totals.pct + '%'); 
     gauge.style.position='relative';
