@@ -1026,6 +1026,27 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
     document.getElementById('pdfPeerName').textContent = document.getElementById('peerName').value || '';
     document.getElementById('pdfPeerEmail').textContent = document.getElementById('peerEmail').value || '';
     document.getElementById('pdfPeerHotel').textContent = document.getElementById('peerHotel').value || '';
+// === Build Information table rows ===
+(function(){
+  const body = document.querySelector('#pdfInfoTable tbody');
+  if(!body) return;
+  const rows = [
+    ['Team Member', document.getElementById('pdfEmpName').textContent, 'Peer Reviewer', document.getElementById('pdfPeerName').textContent],
+    ['Email',       document.getElementById('pdfEmpEmail').textContent, 'Email',        document.getElementById('pdfPeerEmail').textContent],
+    ['Location',    document.getElementById('pdfEmpHotel').textContent, 'Location',     document.getElementById('pdfPeerHotel').textContent]
+  ];
+  body.innerHTML = '';
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    r.forEach((cell,i)=>{
+      const td = document.createElement('td');
+      if(i===0||i===2) td.style.fontWeight='700'; // labels bold
+      td.textContent = cell || '';
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+})();
 
     // Group rows
     const gp = computeGroupPercents();
