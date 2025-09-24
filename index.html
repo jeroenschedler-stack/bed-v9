@@ -771,26 +771,16 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 
   <div class="pdf-divider"></div>
 
- <!-- Info section -->
-<div class="sec-h info-bar"><span>PERSONAL INFORMATION</span></div>
-<div class="info-grid">
-  <div>
-    <div class="sub-h">PERSONAL INFORMATION</div>
-    <div class="card fields">
-      <label>Team Member</label><div id="pdfEmpName"></div>
-      <label>Email</label><div id="pdfEmpEmail"></div>
-      <label>Location</label><div id="pdfEmpHotel"></div>
-    </div>
-  </div>
-  <div>
-    <div class="sub-h">PEER INFORMATION</div>
-    <div class="card fields">
-      <label>Peer Reviewer</label><div id="pdfPeerName"></div>
-      <label>Email</label><div id="pdfPeerEmail"></div>
-      <label>Location</label><div id="pdfPeerHotel"></div>
-    </div>
-  </div>
+<!-- Info section (hidden, kept only for script references) -->
+<div style="display:none">
+  <div id="pdfEmpName"></div>
+  <div id="pdfEmpEmail"></div>
+  <div id="pdfEmpHotel"></div>
+  <div id="pdfPeerName"></div>
+  <div id="pdfPeerEmail"></div>
+  <div id="pdfPeerHotel"></div>
 </div>
+
 
 <!-- Overall Score section -->
 <div class="sec-h assess-bar"><span class="lbl-group">OVERALL SCORE</span></div>
