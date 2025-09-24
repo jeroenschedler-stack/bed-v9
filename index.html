@@ -7,92 +7,60 @@
 
 <style>
 /* === FINAL consolidated fixes === */
-
-/* Screen (non-print) — keep Info table aligned on screen too */
-#pdfReport #pdfInfoTable { table-layout:fixed; width:100%; }
-#pdfReport #pdfInfoTable col:nth-child(1) { width:20%; }
-#pdfReport #pdfInfoTable col:nth-child(2) { width:30%; }
-#pdfReport #pdfInfoTable col:nth-child(3) { width:20%; }
-#pdfReport #pdfInfoTable col:nth-child(4) { width:30%; }
-#pdfReport #pdfInfoTable td { padding:8px 8px; font-size:12px; vertical-align:middle; text-align:left; }
-
-/* === FINAL consolidated fixes === */
-
-/* Screen (non-print) — keep Info table aligned on screen too */
-#pdfReport #pdfInfoTable { table-layout:fixed; width:100%; }
-#pdfReport #pdfInfoTable col:nth-child(1) { width:20%; }
-#pdfReport #pdfInfoTable col:nth-child(2) { width:30%; }
-#pdfReport #pdfInfoTable col:nth-child(3) { width:20%; }
-#pdfReport #pdfInfoTable col:nth-child(4) { width:30%; }
-#pdfReport #pdfInfoTable td { padding:8px 8px; font-size:12px; vertical-align:middle; text-align:left; }
-
-/* === Page-1 screen layout === */
-#welcome { padding:20px 22px; }
-#steps .dot { background:#D0D0D0; }
-#steps .dot.on { background:#E53935 !important; }
-
-/* Print — tables reset + blue separators + Info table widths + your fixes */
 @media print {
-  /* Phase A — Side borders removal (print only) */
-  #pdfReport .card { border:0 !important; box-shadow:none !important; }
-  #pdfReport table { border:0 !important; border-left:0 !important; border-right:0 !important; border-top:0 !important; border-bottom:0 !important; border-collapse:collapse !important; }
-  #pdfReport th, #pdfReport td { border-left:0 !important; border-right:0 !important; }
-  #pdfReport td { border-bottom:0.5px solid #87CEFA !important; }
-  #pdfReport tr:last-child td { border-bottom:none !important; }
-
-  /* Info section column widths (print) */
-  #pdfReport #pdfInfoTable { table-layout:fixed; width:100%; }
-  #pdfReport #pdfInfoTable col:nth-child(1) { width:20%; }
-  #pdfReport #pdfInfoTable col:nth-child(2) { width:30%; }
-  #pdfReport #pdfInfoTable col:nth-child(3) { width:20%; }
-  #pdfReport #pdfInfoTable col:nth-child(4) { width:30%; }
-  #pdfReport #pdfInfoTable td { padding:8px 8px !important; font-size:12px !important; vertical-align:middle !important; text-align:left !important; }
-
-  /* --- Score by Group rows --- */
-  #pdfReport #pdfGroupRows td { padding:8px 8px !important; vertical-align:middle !important; font-size:12px !important; text-align:left !important; }
-
-  /* --- STATEMENTS header bar alignment --- */
-  #pdfReport .statements-bar { display:grid !important; grid-template-columns:10% 45% 30% 15% !important; align-items:center !important; padding:6px 10px !important; }
-  #pdfReport .statements-bar .lbl-stmt { grid-column:1 / span 2 !important; justify-self:start !important; text-align:left !important; }
-  #pdfReport .statements-bar .lbl-group { grid-column:3 !important; justify-self:start !important; text-align:left !important; }
-  #pdfReport .statements-bar .lbl-score { grid-column:4 !important; justify-self:center !important; text-align:center !important; }
-}
-
-  /* Phase A — Side borders removal (print only) */
-  #pdfReport .card { border:0 !important; box-shadow:none !important; }
-  #pdfReport table { border:0 !important; border-left:0 !important; border-right:0 !important; border-top:0 !important; border-bottom:0 !important; border-collapse:collapse !important; }
-  #pdfReport th, #pdfReport td { border-left:0 !important; border-right:0 !important; }
-  #pdfReport td { border-bottom:0.5px solid #87CEFA !important; }
-  #pdfReport tr:last-child td { border-bottom:none !important; }
-
-  /* Info section column widths (print) */
-  #pdfReport #pdfInfoTable { table-layout:fixed; width:100%; }
-  #pdfReport #pdfInfoTable col:nth-child(1) { width:20%; }
-  #pdfReport #pdfInfoTable col:nth-child(2) { width:30%; }
-  #pdfReport #pdfInfoTable col:nth-child(3) { width:20%; }
-  #pdfReport #pdfInfoTable col:nth-child(4) { width:30%; }
-  #pdfReport #pdfInfoTable td { padding:8px 8px !important; font-size:12px !important; vertical-align:middle !important; text-align:left !important; }
+  /* --- Information section rows --- */
+  #pdfReport .info-grid .fields {
+    display: grid !important;
+    grid-template-columns: max-content 1fr !important;
+    border-top: 0.5px solid #1E90FF !important;
+  }
+  #pdfReport .info-grid .fields label,
+  #pdfReport .info-grid .fields > div {
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px 8px !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+    border-bottom: 0.5px solid #1E90FF !important;
+    font-weight: 400 !important; /* remove bold */
+  }
+  #pdfReport .info-grid .fields label:nth-last-child(2),
+  #pdfReport .info-grid .fields > div:last-child {
+    border-bottom: none !important;
+  }
 
   /* --- Score by Group rows --- */
   #pdfReport #pdfGroupRows td {
-    padding:8px 8px !important;
-    vertical-align:middle !important;
-    font-size:12px !important;
-    text-align:left !important;
+    padding: 8px 8px !important;
+    vertical-align: middle !important;
+    font-size: 12px !important;
+    text-align: left !important;
   }
 
   /* --- STATEMENTS header bar alignment --- */
   #pdfReport .statements-bar {
-    display:grid !important;
-    grid-template-columns:10% 45% 30% 15% !important; /* NO | STATEMENT | GROUP | SCORE */
-    align-items:center !important;
-    padding:6px 10px !important;
+    display: grid !important;
+    grid-template-columns: 10% 45% 30% 15% !important; /* NO | STATEMENT | GROUP | SCORE */
+    align-items: center !important;
+    padding: 6px 10px !important;
   }
-  #pdfReport .statements-bar .lbl-stmt { grid-column:1 / span 2 !important; justify-self:start !important; text-align:left !important; }
-  #pdfReport .statements-bar .lbl-group { grid-column:3 !important; justify-self:start !important; text-align:left !important; }
-  #pdfReport .statements-bar .lbl-score { grid-column:4 !important; justify-self:center !important; text-align:center !important; }
+  #pdfReport .statements-bar .lbl-stmt {
+    grid-column: 1 / span 2 !important;
+    justify-self: start !important;
+    text-align: left !important;
+  }
+  #pdfReport .statements-bar .lbl-group {
+    grid-column: 3 !important;
+    justify-self: start !important;
+    text-align: left !important;
+  }
+  #pdfReport .statements-bar .lbl-score {
+    grid-column: 4 !important;
+    justify-self: center !important;
+    text-align: center !important;
+  }
 }
-
+</style>
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
@@ -295,7 +263,19 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     padding-right: 0 !important;
   }
 
- #pdfReport table
+  /* Table borders */
+  #pdfReport table, 
+  #pdfReport th, 
+  #pdfReport td {
+    border: none !important; /* remove all borders completely */
+  }
+  #pdfReport td {
+    border-bottom: 0.5px solid #87CEFA !important; /* thin light blue horizontal line only */
+  }
+  #pdfReport tr:last-child td {
+    border-bottom: none !important;
+  }
+}
 
 /* Phase A — Side borders removal (print only) */
 @media print {
@@ -319,38 +299,6 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   /* Keep only horizontal light-blue separators */
   #pdfReport td { border-bottom: 0.5px solid #87CEFA !important; }
   #pdfReport tr:last-child td { border-bottom: none !important; }
-/* Phase A — Side borders removal (print only) */
-@media print {
-  /* Kill any container/card borders or shadows */
-  #pdfReport .card { border: 0 !important; box-shadow: none !important; }
-
-  /* Ensure no table frame borders */
-  #pdfReport table { 
-    border: 0 !important; 
-    border-left: 0 !important; 
-    border-right: 0 !important; 
-    border-top: 0 !important; 
-    border-bottom: 0 !important;
-    border-collapse: collapse !important;
-  }
-
-  /* Ensure no vertical borders on cells */
-  #pdfReport th, 
-  #pdfReport td {
-    border-left: 0 !important;
-    border-right: 0 !important;
-  }
-
-  /* Keep only horizontal light-blue separators */
-  #pdfReport td { border-bottom: 0.5px solid #87CEFA !important; }
-  #pdfReport tr:last-child td { border-bottom: none !important; }
-
-  /* === Info section column widths === */
-  #pdfReport #pdfInfoTable { table-layout:fixed; width:100%; }
-  #pdfReport #pdfInfoTable col:nth-child(1) { width:20%; }
-  #pdfReport #pdfInfoTable col:nth-child(2) { width:30%; }
-  #pdfReport #pdfInfoTable col:nth-child(3) { width:20%; }
-  #pdfReport #pdfInfoTable col:nth-child(4) { width:30%; }
 }
 
 /* Phase A — Set default print page size to A4 */
@@ -822,15 +770,26 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   </div>
 
   <div class="pdf-divider"></div>
-<!-- Info section — TABLE version (matches Score by Group) -->
-<div class="sec-h info-bar"><span>TEAM MEMBER</span><span class="peer-label">PEER REVIEWER</span></div>
-<div class="card" style="padding:0">
-  <table id="pdfInfoTable">
-    <colgroup>
-      <col><col><col><col>
-    </colgroup>
-    <tbody></tbody>
-  </table>
+
+ <!-- Info section -->
+<div class="sec-h info-bar"><span>PERSONAL INFORMATION</span></div>
+<div class="info-grid">
+  <div>
+    <div class="sub-h">PERSONAL INFORMATION</div>
+    <div class="card fields">
+      <label>Team Member</label><div id="pdfEmpName"></div>
+      <label>Email</label><div id="pdfEmpEmail"></div>
+      <label>Location</label><div id="pdfEmpHotel"></div>
+    </div>
+  </div>
+  <div>
+    <div class="sub-h">PEER INFORMATION</div>
+    <div class="card fields">
+      <label>Peer Reviewer</label><div id="pdfPeerName"></div>
+      <label>Email</label><div id="pdfPeerEmail"></div>
+      <label>Location</label><div id="pdfPeerHotel"></div>
+    </div>
+  </div>
 </div>
 
 <!-- Overall Score section -->
@@ -1065,27 +1024,6 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
     document.getElementById('pdfPeerName').textContent = document.getElementById('peerName').value || '';
     document.getElementById('pdfPeerEmail').textContent = document.getElementById('peerEmail').value || '';
     document.getElementById('pdfPeerHotel').textContent = document.getElementById('peerHotel').value || '';
-// === Build Information table rows ===
-(function(){
-  const body = document.querySelector('#pdfInfoTable tbody');
-  if(!body) return;
-  const rows = [
-    ['Team Member', document.getElementById('pdfEmpName').textContent, 'Peer Reviewer', document.getElementById('pdfPeerName').textContent],
-    ['Email',       document.getElementById('pdfEmpEmail').textContent, 'Email',        document.getElementById('pdfPeerEmail').textContent],
-    ['Location',    document.getElementById('pdfEmpHotel').textContent, 'Location',     document.getElementById('pdfPeerHotel').textContent]
-  ];
-  body.innerHTML = '';
-  rows.forEach(r=>{
-    const tr = document.createElement('tr');
-    r.forEach((cell,i)=>{
-      const td = document.createElement('td');
-      if(i===0||i===2) td.style.fontWeight='700'; // labels bold
-      td.textContent = cell || '';
-      tr.appendChild(td);
-    });
-    body.appendChild(tr);
-  });
-})();
 
     // Group rows
     const gp = computeGroupPercents();
