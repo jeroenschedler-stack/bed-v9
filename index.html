@@ -6,9 +6,14 @@
 <title>BED HOSPITALITY — Self-Assessment</title>
 
 <style>
-/* === Match Information rows to Score by Group rows === */
+/* === FINAL consolidated fixes === */
 @media print {
-  /* Info section: same padding, font size, and vertical centering as table cells */
+  /* --- Information section rows --- */
+  #pdfReport .info-grid .fields {
+    display: grid !important;
+    grid-template-columns: max-content 1fr !important;
+    border-top: 0.5px solid #1E90FF !important;
+  }
   #pdfReport .info-grid .fields label,
   #pdfReport .info-grid .fields > div {
     display: flex !important;
@@ -16,13 +21,43 @@
     padding: 8px 8px !important;
     font-size: 12px !important;
     line-height: 1.35 !important;
+    border-bottom: 0.5px solid #1E90FF !important;
+    font-weight: 400 !important; /* remove bold */
+  }
+  #pdfReport .info-grid .fields label:nth-last-child(2),
+  #pdfReport .info-grid .fields > div:last-child {
+    border-bottom: none !important;
   }
 
-  /* Score by Group: ensure same vertical centering */
+  /* --- Score by Group rows --- */
   #pdfReport #pdfGroupRows td {
     padding: 8px 8px !important;
     vertical-align: middle !important;
     font-size: 12px !important;
+    text-align: left !important;
+  }
+
+  /* --- STATEMENTS header bar alignment --- */
+  #pdfReport .statements-bar {
+    display: grid !important;
+    grid-template-columns: 10% 45% 30% 15% !important; /* NO | STATEMENT | GROUP | SCORE */
+    align-items: center !important;
+    padding: 6px 10px !important;
+  }
+  #pdfReport .statements-bar .lbl-stmt {
+    grid-column: 1 / span 2 !important;
+    justify-self: start !important;
+    text-align: left !important;
+  }
+  #pdfReport .statements-bar .lbl-group {
+    grid-column: 3 !important;
+    justify-self: start !important;
+    text-align: left !important;
+  }
+  #pdfReport .statements-bar .lbl-score {
+    grid-column: 4 !important;
+    justify-self: center !important;
+    text-align: center !important;
   }
 }
 </style>
