@@ -706,7 +706,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <section aria-hidden="true" id="pdfReport">
 <div class="pdf-top">
 <div>
-<div class="pdf-title">BED HOSPITALITY 2.0</div>
+<div class="pdf-title">BED HOSPITALITY 3.0</div>
 <div class="pdf-sub" style="font-size:22px;">Team Member Self-Assessment</div>
 <div class="pdf-date" id="pdfDate">Report Date —</div>
 <div id="pdfBandText" style="margin-top:6px; font-size:12px; color:#666;"></div>
@@ -944,7 +944,7 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   function buildPdfReport(){
     // Date + score box
     const totals = computeTotals();
-    document.getElementById('pdfDate').textContent = 'Assessment Date ' + formatDate();
+    document.getElementById('pdfDate').textContent = 'Report Date ' + formatDate();
     document.getElementById('pdfTotalPct').textContent = (isFinite(totals.pct) ? totals.pct : '—') + '%';
     document.getElementById('pdfTotalRaw').textContent = (totals.raw||0) + ' OUT OF ' + ((S.questions||[]).length * 5 || 175);
 
@@ -1626,6 +1626,49 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
       setTimeout(window.buildPdfReport, 0);
     }
   }, true);
+})();
+</script>
+  <script>
+(function(){
+  // Date format: DDMMMYYYY (e.g., 24Sep2025)
+  function formatDateDDMMMYYYY(d=new Date()){
+    const mon = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const dd  = String(d.getDate()).padStart(2,'0');
+    return `${dd}${mon[d.getMonth()]}${d.getFullYear()}`;
+  }
+
+  // Try multiple sources to get overall % (robust)
+  function getOverallPct(){
+    try { if (typeof window.computeOverallPercent === 'function') {
+      const v = window.computeOverallPercent(); if (!isNaN(v)) return Math.round(v);
+    }} catch(e){}
+    try { if (window.totals && typeof window.totals.pct === 'number') return Math.round(window.totals.pct); } catch(e){}
+    const sp = document.getElementById('scorePercent');
+    if (sp) {
+      const m = sp.textContent.match(/(\d+)\s*%/);
+      if (m) return parseInt(m[1],10);
+    }
+    return 0;
+  }
+
+  function bandTextFor(p){
+    if (p < 50) return "You are behind and need more support. Please contact your coach.";
+    if (p < 75) return "You are on track but can improve further.";
+    return "Excellent progress. Keep leading by example!";
+  }
+
+  const _origBuild = window.buildPdfReport;
+  window.buildPdfReport = function(){
+    if (typeof _origBuild === 'function') _origBuild();
+
+    // Set date in your desired format
+    const dateEl = document.getElementById('pdfDate');
+    if (dateEl) dateEl.textContent = 'Report Date ' + formatDateDDMMMYYYY();
+
+    // Set score band text under the date
+    const bandEl = document.getElementById('pdfBandText');
+    if (bandEl) bandEl.textContent = bandTextFor(getOverallPct());
+  };
 })();
 </script>
 </body>
