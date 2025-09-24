@@ -294,22 +294,20 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     width: 100%;
     border-collapse: collapse;
   }
-  #pdfReport #pdfInfoTable,
-  #pdfReport #pdfInfoTable td {
-    border: none !important; /* no outer/vertical borders */
-  }
   #pdfReport #pdfInfoTable td {
     padding: 8px 8px !important;
     font-size: 12px !important;
     vertical-align: middle !important;
     text-align: left !important;
-    border-bottom: 0.5px solid #87CEFA !important; /* thin light-blue rule */
+    border-bottom: 0.5px solid #87CEFA !important;
+    overflow-wrap: anywhere;      /* allow long text to break */
+    word-break: break-word;       /* prevent overflow */
   }
   #pdfReport #pdfInfoTable tr:last-child td {
     border-bottom: none !important;
   }
-  #pdfReport #pdfInfoTable td:first-child {
-    font-weight: 600; /* label column bold */
+  #pdfReport #pdfInfoTable td:nth-child(odd) {
+    font-weight: 600; /* make label cells bold */
   }
 }
 
@@ -725,19 +723,26 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <!-- Information section -->
 <div class="sec-h assess-bar"><span class="lbl-group">INFORMATION</span></div>
 <div class="card" style="padding:0">
- <table id="pdfInfoTable">
-  <colgroup>
-    <col style="width:35%">
-    <col style="width:65%">
-  </colgroup>
-
+  <table id="pdfInfoTable">
+    <colgroup>
+      <col style="width:20%">
+      <col style="width:30%">
+      <col style="width:20%">
+      <col style="width:30%">
+    </colgroup>
     <tbody>
-      <tr><td>Team Member</td><td id="pdfEmpName"></td></tr>
-      <tr><td>Email</td><td id="pdfEmpEmail"></td></tr>
-      <tr><td>Location</td><td id="pdfEmpHotel"></td></tr>
-      <tr><td>Peer Reviewer</td><td id="pdfPeerName"></td></tr>
-      <tr><td>Email</td><td id="pdfPeerEmail"></td></tr>
-      <tr><td>Location</td><td id="pdfPeerHotel"></td></tr>
+      <tr>
+        <td>Team Member</td><td id="pdfEmpName"></td>
+        <td>Peer Reviewer</td><td id="pdfPeerName"></td>
+      </tr>
+      <tr>
+        <td>Email</td><td id="pdfEmpEmail"></td>
+        <td>Email</td><td id="pdfPeerEmail"></td>
+      </tr>
+      <tr>
+        <td>Location</td><td id="pdfEmpHotel"></td>
+        <td>Location</td><td id="pdfPeerHotel"></td>
+      </tr>
     </tbody>
   </table>
 </div>
