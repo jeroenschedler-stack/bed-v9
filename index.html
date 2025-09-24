@@ -1628,48 +1628,50 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   }, true);
 })();
 </script>
-  <script>
+<script>
 (function(){
-  // Date format: DDMMMYYYY (e.g., 24Sep2025)
+  // Date format: DD MMM YYYY (e.g., 24 Sep 2025)
   function formatDateDDMMMYYYY(d=new Date()){
     const mon = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const dd  = String(d.getDate()).padStart(2,'0');
-    return `${dd}${mon[d.getMonth()]}${d.getFullYear()}`;
+    return `${dd} ${mon[d.getMonth()]} ${d.getFullYear()}`;
   }
 
-  // Try multiple sources to get overall % (robust)
-  function getOverallPct(){
-    try { if (typeof window.computeOverallPercent === 'function') {
-      const v = window.computeOverallPercent(); if (!isNaN(v)) return Math.round(v);
-    }} catch(e){}
-    try { if (window.totals && typeof window.totals.pct === 'number') return Math.round(window.totals.pct); } catch(e){}
-    const sp = document.getElementById('scorePercent');
-    if (sp) {
-      const m = sp.textContent.match(/(\d+)\s*%/);
-      if (m) return parseInt(m[1],10);
-    }
-    return 0;
-  }
+  // --- Keep PDF band text identical to on-screen recommendation (#recText) ---
+  // Track the current recommendation text as your app sets it on submitAll.
+  (function trackRecText(){
+    const el = document.getElementById('recText');
+    if (!el) return;
+    // Save the current value immediately
+    window.__REC = (el.innerText || el.textContent || '').trim();
+    // Watch for any updates your code makes later
+    const obs = new MutationObserver(()=>{
+      window.__REC = (el.innerText || el.textContent || '').trim();
+    });
+    obs.observe(el, { childList:true, subtree:true, characterData:true });
+  })();
 
-  function bandTextFor(p){
-    if (p < 50) return "You are behind and need more support. Please contact your coach.";
-    if (p < 75) return "You are on track but can improve further.";
-    return "Excellent progress. Keep leading by example!";
-  }
-
+  // Wrap buildPdfReport so we can set date + band text
   const _origBuild = window.buildPdfReport;
   window.buildPdfReport = function(){
     if (typeof _origBuild === 'function') _origBuild();
 
-    // Set date in your desired format
+    // 1) Set the date
     const dateEl = document.getElementById('pdfDate');
     if (dateEl) dateEl.textContent = 'Report Date ' + formatDateDDMMMYYYY();
 
-    // Set score band text under the date
-    const bandEl = document.getElementById('pdfBandText');
-    if (bandEl) bandEl.textContent = bandTextFor(getOverallPct());
+    // 2) Inject the EXACT same band text used on screen
+    const dest = document.getElementById('pdfBandText');
+    if (dest) {
+      let t = (window.__REC || '').trim();
+      if (!t) { // fallback: read #recText directly if needed
+        const src = document.getElementById('recText');
+        if (src) t = (src.innerText || src.textContent || '').trim();
+      }
+      dest.textContent = t;
+    }
   };
 })();
 </script>
-</body>
-</html>
+
+
