@@ -6,50 +6,61 @@
 <title>BED HOSPITALITY — Self-Assessment</title>
 
 <style>
-/* === Continuous row lines in Information section === */
+/* === FINAL consolidated fixes === */
 @media print {
-  /* Info section as two-column grid */
+  /* --- Information section rows --- */
   #pdfReport .info-grid .fields {
     display: grid !important;
     grid-template-columns: max-content 1fr !important;
+    border-top: 0.5px solid #1E90FF !important;
   }
-
-  /* Normal cell styling (no borders here) */
   #pdfReport .info-grid .fields label,
   #pdfReport .info-grid .fields > div {
+    display: flex !important;
+    align-items: center !important;
     padding: 8px 8px !important;
     font-size: 12px !important;
     line-height: 1.35 !important;
-    display: flex !important;
-    align-items: center !important;
-    border: none !important; /* clear borders from cells */
+    border-bottom: 0.5px solid #1E90FF !important;
+    font-weight: 400 !important; /* remove bold */
   }
-
-  /* Continuous border across full row */
-  #pdfReport .info-grid .fields label::after {
-    content: "";
-    grid-column: 1 / span 2;
-    display: block;
-    border-bottom: 0.5px solid #1E90FF;
-    margin-top: 8px;
-  }
-
-  /* Remove border after last row */
-  #pdfReport .info-grid .fields label:nth-last-child(2)::after {
+  #pdfReport .info-grid .fields label:nth-last-child(2),
+  #pdfReport .info-grid .fields > div:last-child {
     border-bottom: none !important;
   }
 
-  /* Score by Group stays the same */
+  /* --- Score by Group rows --- */
   #pdfReport #pdfGroupRows td {
     padding: 8px 8px !important;
     vertical-align: middle !important;
     font-size: 12px !important;
     text-align: left !important;
   }
+
+  /* --- STATEMENTS header bar alignment --- */
+  #pdfReport .statements-bar {
+    display: grid !important;
+    grid-template-columns: 10% 45% 30% 15% !important; /* NO | STATEMENT | GROUP | SCORE */
+    align-items: center !important;
+    padding: 6px 10px !important;
+  }
+  #pdfReport .statements-bar .lbl-stmt {
+    grid-column: 1 / span 2 !important;
+    justify-self: start !important;
+    text-align: left !important;
+  }
+  #pdfReport .statements-bar .lbl-group {
+    grid-column: 3 !important;
+    justify-self: start !important;
+    text-align: left !important;
+  }
+  #pdfReport .statements-bar .lbl-score {
+    grid-column: 4 !important;
+    justify-self: center !important;
+    text-align: center !important;
+  }
 }
 </style>
-
-
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
@@ -777,27 +788,26 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 
   <div class="pdf-divider"></div>
 
-<!-- Info section -->
+ <!-- Info section -->
 <div class="sec-h info-bar"><span>TEAM MEMBER</span><span class="peer-label">PEER REVIEWER</span></div>
 <div class="info-grid">
   <div>
     <div class="sub-h">PERSONAL INFORMATION</div>
     <div class="card fields">
-      <div class="kv"><label>Employee name</label><div id="pdfEmpName"></div></div>
-      <div class="kv"><label>Email address</label><div id="pdfEmpEmail"></div></div>
-      <div class="kv"><label>Location</label><div id="pdfEmpHotel"></div></div>
+      <label>Employee name</label><div id="pdfEmpName"></div>
+      <label>Email address</label><div id="pdfEmpEmail"></div>
+      <label>Location</label><div id="pdfEmpHotel"></div>
     </div>
   </div>
   <div>
     <div class="sub-h">PEER INFORMATION</div>
     <div class="card fields">
-      <div class="kv"><label>Peer name</label><div id="pdfPeerName"></div></div>
-      <div class="kv"><label>Email address</label><div id="pdfPeerEmail"></div></div>
-      <div class="kv"><label>Location</label><div id="pdfPeerHotel"></div></div>
+      <label>Peer name</label><div id="pdfPeerName"></div>
+      <label>Email address</label><div id="pdfPeerEmail"></div>
+      <label>Location</label><div id="pdfPeerHotel"></div>
     </div>
   </div>
 </div>
-
 
 <!-- Overall Score section -->
 <div class="sec-h assess-bar"><span class="lbl-group">OVERALL SCORE</span></div>
