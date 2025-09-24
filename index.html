@@ -550,7 +550,27 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   padding: 6px 10px !important; /* same as .sec-h default */
   margin: 16px 0 8px 0 !important;
 }
-</style></head>
+</style><style>
+/* === Alignment patch === */
+
+/* Personal/peer info labels + values (Employee name, Email, Location) */
+#pdfReport .info-grid .fields {
+  grid-template-columns: auto 1fr !important; /* shrink labels, values flexible */
+}
+
+#pdfReport .info-grid .fields label,
+#pdfReport .info-grid .fields div {
+  text-align: left !important;
+  justify-self: start !important;
+}
+
+/* Score by Group rows (hospitality skills, BED competencies, etc.) */
+#pdfReport #pdfGroupRows td {
+  text-align: left !important;
+  justify-self: start !important;
+}
+</style>
+</head>
 <body>
 <main class="container">
 <h1>BED HOSPITALITY 2.0</h1>
