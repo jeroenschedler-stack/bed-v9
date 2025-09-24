@@ -210,6 +210,16 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 
 /* Phase A, Step 1 final refinement — only horizontal light blue lines */
 @media print {
+
+  /* Remove horizontal padding for Employee info cells */
+  #pdfReport #pdfEmpName,
+  #pdfReport #pdfEmpEmail,
+  #pdfReport #pdfEmpHotel {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Table borders */
   #pdfReport table, 
   #pdfReport th, 
   #pdfReport td {
