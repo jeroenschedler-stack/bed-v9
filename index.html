@@ -200,7 +200,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     .pdf-top{display:grid; grid-template-columns: 1fr 220px; gap:16px; align-items:start; margin-bottom:10px}
     .pdf-title{font-size:34px; font-weight:900; color:var(--blue); margin:0}
     .pdf-sub{font-size:28px; font-weight:700; color:var(--blue); margin:2px 0 2px 0}
-    .pdf-date{font-size:18px; color:var(--blue); margin:2px 0 10px 0}
+    .pdf-date{font-size:28px; font-weight:700; color:var(--blue); margin:4px 0 10px 0}
     .pdf-divider{height:1px; background:#cfd4dc; margin:8px 0 14px 0}
 
     /* ====== SCORE BOX (SAFE TO EDIT) ====== */
@@ -214,7 +214,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
       text-align:center;
     }
     .score-box .label{font-size:18px; font-weight:600; letter-spacing:.5px}
-    .score-box .pct{font-size:36px; font-weight:800; margin:6px 0 2px 0}
+    .score-box .pct{font-size:36px; font-weight:800; margin:2px 0 2px 0}
     .score-box .raw{font-size:18px; font-weight:800; opacity:.95}
 
     /* ====== SECTION HEADERS (SAFE TO EDIT) ====== */
@@ -666,7 +666,6 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </section>
 <!-- Instructions -->
 <section id="instructions" style="display:none">
-  <br>
 <h2 class="section-title">SELF-ASSESSMENT</h2>
 <p class="intro">
       Read each statement and think how you act in these situations. Then select the rating that best fits you. Be honest with yourself. The goal is to know what you're good at and what you could do better
@@ -765,7 +764,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <div class="modal-backdrop" id="eligBackdrop" style="position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:50">
 <div class="modal" style="width:min(92vw,520px); background:#fff; border-radius:18px; padding:20px; box-shadow:0 20px 60px rgba(0,0,0,.25)">
 <h3 style="margin:0 0 10px 0; font-size:18px">please confirm</h3>
-<p style="margin:0 0 18px 0; font-size:16px; line-height:1.5; color:#222">my peer knows me well and worked in BED for at least 12 months</p>
+<p style="margin:0 0 18px 0; font-size:16px; line-height:1.5; color:#222">my peer reviewer knows me well and worked in BED for at least 12 months</p>
 <div class="row-btns" style="display:flex; justify-content:flex-end; gap:10px">
 <button class="btn-secondary" id="eligCancel">Cancel</button>
 <button id="eligOk">OK</button>
@@ -1003,19 +1002,21 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   };
 
   function formatDate(){
-    try{
-      const dt = new Date();
-      const opts = {day:'numeric', month:'short', year:'numeric'};
-      return dt.toLocaleDateString(undefined, opts);
-    }catch(_){ return ''; }
-  }
+  try {
+    const dt = new Date();
+    const day   = String(dt.getDate()).padStart(2, '0');          // 01–31
+    const month = dt.toLocaleString('en-US', { month: 'short' }); // Jan, Feb, ...
+    const year  = dt.getFullYear();
+    return `${day} ${month} ${year}`;
+  } catch(_) { return ''; }
+}
 
   function buildPdfReport(){
     // Date + score box
     const totals = computeTotals();
     document.getElementById('pdfDate').textContent = 'Report Date ' + formatDate();
     document.getElementById('pdfTotalPct').textContent = (isFinite(totals.pct) ? totals.pct : '—') + '%';
-    document.getElementById('pdfTotalRaw').textContent = (totals.raw||0) + ' OUT OF ' + ((S.questions||[]).length * 5 || 175);
+    document.getElementById('pdfTotalRaw').textContent = (totals.raw||0) + ' of ' + ((S.questions||[]).length * 5 || 175) + ' POINTS';
 // === PDF recommendation band (under the date) ===
 (function(){
   const recTarget = document.getElementById('pdfBandText');
