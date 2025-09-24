@@ -1502,6 +1502,71 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   if (pdf) pdf.addEventListener('click', ensureNormalized, {capture:true});
 })();
 </script>
+
+<script>
+// === Final PDF Fix: merge group % with full details ===
+(function(){
+  function stripLeadingNumber(t){ return String(t||'').replace(/^\s*\d+\.\s*/, ''); }
+  function ensureNormalized(){
+    const MAP = {
+      "Hospitality Skills":"hospitality skills",
+      "Hospitality Competencies":"BED competencies",
+      "Taking Ownership":"taking ownership",
+      "Collaboration":"collaboration"
+    };
+    const S = window.__S || window.S || {};
+    (S.questions||[]).forEach(q => { if(MAP[q.group]) q.group = MAP[q.group]; });
+    (S.groups||[]).forEach(g => { if(MAP[g.name]) g.name = MAP[g.name]; });
+  }
+  function descMap(){
+    const S = window.__S || window.S || {};
+    const d = {};
+    (S.groups||[]).forEach(g => d[g.name] = g.description || '');
+    return d;
+  }
+  const _origBuild = window.buildPdfReport;
+  window.buildPdfReport = function(){
+    ensureNormalized();
+    if (typeof _origBuild === 'function') _origBuild(); // keeps totals + info
+
+    const S = window.__S || window.S || {};
+
+    // --- Fix SCORE BY GROUP table ---
+    const body = document.getElementById('pdfGroupRows');
+    if (body){
+      body.innerHTML='';
+      const pct = window.computeGroupPercents();
+      const d   = descMap();
+      ["hospitality skills","BED competencies","taking ownership","collaboration"].forEach(name=>{
+        const tr = document.createElement('tr');
+        const td1=document.createElement('td'); td1.textContent=name;
+        const td2=document.createElement('td'); td2.textContent=(pct[name]??0)+'%';
+        const td3=document.createElement('td'); td3.textContent=d[name]||'';
+        tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+        body.appendChild(tr);
+      });
+    }
+
+    // --- Fix STATEMENTS table ---
+    const tb = document.querySelector('#pdfStatements tbody');
+    if (tb){
+      tb.innerHTML='';
+      (S.questions||[]).forEach((q,i)=>{
+        const tr = document.createElement('tr');
+        const tdNo=document.createElement('td'); tdNo.textContent=i+1;
+        const tdSt=document.createElement('td');
+        tdSt.innerHTML='<div class="st-title">'+stripLeadingNumber(q.statement||'')+'</div>'
+          +(q.subtext?('<div class="muted">'+q.subtext+'</div>'):''); 
+        const tdGp=document.createElement('td'); tdGp.textContent=q.group||'';
+        const tdRt=document.createElement('td'); tdRt.textContent=(S.answers[q.id]??'');
+        tr.appendChild(tdNo); tr.appendChild(tdSt); tr.appendChild(tdGp); tr.appendChild(tdRt);
+        tb.appendChild(tr);
+      });
+    }
+  };
+})();
+</script>
+
 </body>
 </html>
 <script>
