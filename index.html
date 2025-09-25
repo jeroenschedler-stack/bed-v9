@@ -193,7 +193,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
       text-align:center;
     }
     .score-box .pct{font-size:36px; font-weight:800; margin:2px 0 2px 0}
-   .score-box .raw { font-size:16px; font-weight:600; margin-bottom:10px; opacity:1 !important; color:#FFFFFF !important; }
+    .score-box .raw { font-size:16px; font-weight:600; opacity:.95; margin-bottom:10px; }
 
 /* ====== SECTION HEADERS (SAFE TO EDIT) ====== */
 .sec-h { background:var(--blue) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; color:#fff !important; font-weight:800; text-transform:uppercase; padding:6px 10px; border-radius:4px; margin:16px 0 8px 0; }
@@ -288,7 +288,28 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   }
 }
 @media print {
-pdfInfoTable
+  /* Information table matches Score by Group styling */
+  #pdfReport #pdfInfoTable {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  #pdfReport #pdfInfoTable td {
+    padding: 8px 8px !important;
+    font-size: 12px !important;
+    vertical-align: middle !important;
+    text-align: left !important;
+    border-bottom: 0.5px solid #87CEFA !important;
+    overflow-wrap: anywhere;      /* allow long text to break */
+    word-break: break-word;       /* prevent overflow */
+  }
+  #pdfReport #pdfInfoTable tr:last-child td {
+    border-bottom: none !important;
+  }
+  #pdfReport #pdfInfoTable td:nth-child(odd) {
+    font-weight: 600; /* make label cells bold */
+  }
+}
 
 /* PDF: Assessment header bar with three labels aligned to table columns */
 @media print {
@@ -310,20 +331,7 @@ pdfInfoTable
     padding: 4px 8px !important;
   }
 }
-/* Tighten left padding for Information labels */
-@media print {
-  #pdfReport #pdfInfoTable td:first-child,
-  #pdfReport #pdfInfoTable td:nth-child(3) {
-    padding-left: 2px !important;
-  }
-}
 
-/* Tighten left padding for Information labels (screen) */
-#pdfReport #pdfInfoTable td:first-child,
-#pdfReport #pdfInfoTable td:nth-child(3) {
-  padding-left: 2px !important;
-}
-  
 /* PDF: lock Statements table column widths */
 @media print {
   #pdfReport .statements-table { table-layout: fixed; width: 100%; }
@@ -963,11 +971,8 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   } else {
     rec = 'Awesome! Your understanding of BED is an inspiration for others. Continue to lead others by example';
   }
-  recTarget.innerHTML = 
-  "<span style='font-size:11pt; font-weight:400;'>" + 
-    "Your overall score is " + totals.pct + "%. This is our best advice for you:" + 
-  "</span><br>" + 
-  "<span style='font-size:12pt; font-weight:500;'>" + rec + "</span>";
+  recTarget.innerHTML = "Your overall assessment score is " + totals.pct + "% and here are our recommendations:<br>" + rec;
+})();
     // Info
     document.getElementById('pdfEmpName').textContent = document.getElementById('nick').value || '';
     document.getElementById('pdfEmpEmail').textContent = document.getElementById('email').value || '';
