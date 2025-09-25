@@ -10,7 +10,7 @@
 @media print {
   /* --- Score by Group rows --- */
   #pdfReport #pdfGroupRows td {
-    padding: 8px 8px !important;
+    padding: 8px 1px !important;
     vertical-align: middle !important;
     font-size: 12px !important;
     text-align: left !important;
@@ -177,9 +177,9 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 
     /* Title block */
     .pdf-top{display:grid; grid-template-columns: 1fr 220px; gap:16px; align-items:start; margin-bottom:10px}
-    .pdf-title{font-size:36px; font-weight:900; color:var(--blue); margin:0}
-    .pdf-sub { font-size:28px; font-weight:600; color:var(--blue); margin:2px 0; line-height:1.2; text-align:left; }
-    .pdf-date { font-size:28px; font-weight:600; color:var(--blue); margin:2px 0; line-height:1.2; text-align:left; }
+    .pdf-title{font-size:45px; font-weight:1000; color:var(--blue); margin:0}
+    .pdf-sub { font-size:25px; font-weight:600; color:var(--blue); margin:2px 0; line-height:1.2; text-align:left; }
+    .pdf-date { font-size:25px; font-weight:600; color:var(--blue); margin:2px 0; line-height:1.2; text-align:left; }
     .pdf-divider{height:1px; background:#cfd4dc; margin:8px 0 14px 0}
 
     /* ====== SCORE BOX (SAFE TO EDIT) ====== */
@@ -192,8 +192,8 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
       padding:12px 14px;
       text-align:center;
     }
-    .score-box .pct{font-size:40px; font-weight:900; margin:2px 0 2px 0}
-  .score-box .raw { font-size:20px; font-weight:800; color:#fff !important; opacity:1 !important; margin-bottom:10px; }
+    .score-box .pct{font-size:40px; font-weight:900; margin:4px 0 2px 0}
+  .score-box .raw { font-size:20px; font-weight:800; color:#fff !important; margin-bottom:6px; }
  }
 
 /* ====== SECTION HEADERS (SAFE TO EDIT) ====== */
@@ -296,7 +296,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     border-collapse: collapse;
   }
   #pdfReport #pdfInfoTable td {
-    padding: 8px 8px !important;
+    padding: 8px 1px !important;
     font-size: 12px !important;
     vertical-align: middle !important;
     text-align: left !important;
@@ -680,7 +680,8 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <div class="big-check"></div>
 <div class="center">
  <h3 style="font-size:32px; margin:8px 0 6px 0; color:#444;">self-assessment<br>completed</h3>
-<p style="font-size:16px; font-weight: 500;color:#444; line-height:1.5;">click PDF to download the report<br>send your peer the review form </p>
+<p style="font-size:16px; font-weight: 500;color:#444; line-height:1.5;">click PDF to download the report<br>please send the review form to your peer
+</p>
 </div>
   <br>
   <br>
@@ -944,17 +945,16 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   function formatDate(){
   try {
     const dt = new Date();
-    const day   = String(dt.getDate()).padStart(2, '0');          // 01–31
-    const month = dt.toLocaleString('en-US', { month: 'short' }); // Jan, Feb, ...
+    const day   = String(dt.getDate()).padStart(2, '0');      // 01–31
+    const month = String(dt.getMonth() + 1).padStart(2, '0'); // 01–12
     const year  = dt.getFullYear();
-    return `${day} ${month} ${year}`;
+    return `${day}-${month}-${year}`;
   } catch(_) { return ''; }
 }
-
   function buildPdfReport(){
     // Date + score box
     const totals = computeTotals();
-    document.getElementById('pdfDate').textContent = 'Report Date ' + formatDate();
+    document.getElementById('pdfDate').textContent = 'REPORT DATE ' + formatDate();
     document.getElementById('pdfTotalPct').textContent = (isFinite(totals.pct) ? totals.pct : '—') + '%';
    document.getElementById('pdfTotalRaw').textContent =(totals.raw || 0) + ' of ' + ((S.questions || []).length * 5 || 175);
 // === PDF recommendation band (under the date) ===
