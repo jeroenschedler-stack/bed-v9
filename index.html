@@ -288,28 +288,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   }
 }
 @media print {
-  /* Information table matches Score by Group styling */
-  #pdfReport #pdfInfoTable {
-    table-layout: fixed;
-    width: 100%;
-    border-collapse: collapse;
-  }
-  #pdfReport #pdfInfoTable td {
-    padding: 8px 8px !important;
-    font-size: 12px !important;
-    vertical-align: middle !important;
-    text-align: left !important;
-    border-bottom: 0.5px solid #87CEFA !important;
-    overflow-wrap: anywhere;      /* allow long text to break */
-    word-break: break-word;       /* prevent overflow */
-  }
-  #pdfReport #pdfInfoTable tr:last-child td {
-    border-bottom: none !important;
-  }
-  #pdfReport #pdfInfoTable td:nth-child(odd) {
-    font-weight: 600; /* make label cells bold */
-  }
-}
+pdfInfoTable
 
 /* PDF: Assessment header bar with three labels aligned to table columns */
 @media print {
@@ -331,7 +310,20 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     padding: 4px 8px !important;
   }
 }
+/* Tighten left padding for Information labels */
+@media print {
+  #pdfReport #pdfInfoTable td:first-child,
+  #pdfReport #pdfInfoTable td:nth-child(3) {
+    padding-left: 2px !important;
+  }
+}
 
+/* Tighten left padding for Information labels (screen) */
+#pdfReport #pdfInfoTable td:first-child,
+#pdfReport #pdfInfoTable td:nth-child(3) {
+  padding-left: 2px !important;
+}
+  
 /* PDF: lock Statements table column widths */
 @media print {
   #pdfReport .statements-table { table-layout: fixed; width: 100%; }
