@@ -178,8 +178,8 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     /* Title block */
     .pdf-top{display:grid; grid-template-columns: 1fr 220px; gap:16px; align-items:start; margin-bottom:10px}
     .pdf-title{font-size:34px; font-weight:900; color:var(--blue); margin:0}
-    .pdf-sub { font-size:22px; font-weight:600; color:#2F2F2F; margin:2px 0; line-height:1.2; text-align:left; }
-    .pdf-date { font-size:22px; font-weight:600; color:#2F2F2F; margin:2px 0; line-height:1.2; text-align:left; }
+    .pdf-sub { font-size:22px; font-weight:600; color:var(--blue); margin:2px 0; line-height:1.2; text-align:left; }
+    .pdf-date { font-size:22px; font-weight:600; color:var(--blue); margin:2px 0; line-height:1.2; text-align:left; }
     .pdf-divider{height:1px; background:#cfd4dc; margin:8px 0 14px 0}
 
     /* ====== SCORE BOX (SAFE TO EDIT) ====== */
@@ -192,8 +192,9 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
       padding:12px 14px;
       text-align:center;
     }
-    .score-box .pct{font-size:36px; font-weight:800; margin:2px 0 2px 0}
-    .score-box .raw { font-size:16px; font-weight:600; opacity:.95; margin-bottom:10px; }
+    .score-box .pct{font-size:36px; font-weight:900; margin:2px 0 2px 0}
+  .score-box .raw { font-size:26px; font-weight:600; color:#fff !important; opacity:1 !important; margin-bottom:10px; }
+ }
 
 /* ====== SECTION HEADERS (SAFE TO EDIT) ====== */
 .sec-h { background:var(--blue) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; color:#fff !important; font-weight:800; text-transform:uppercase; padding:6px 10px; border-radius:4px; margin:16px 0 8px 0; }
@@ -707,9 +708,9 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <section aria-hidden="true" id="pdfReport">
   <div class="pdf-top">
     <div>
-      <div class="pdf-title">BED HOSPITALITY 2.0</div>
-      <div class="pdf-sub" style="font-size:24px;">Team Member Self-Assessment</div>
-      <div class="pdf-date" id="pdfDate">Report Date —</div>
+       <div class="pdf-title">BED HOSPITALITY 2.0</div>
+  <div class="pdf-sub">TEAM MEMBER REPORT</div>
+  <div class="pdf-date" id="pdfDate">ASSESSMENT DATE —</div>
     </div>
     <div class="score-box">
       <div class="pct" id="pdfTotalPct">—%</div>
@@ -955,7 +956,7 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
     const totals = computeTotals();
     document.getElementById('pdfDate').textContent = 'Report Date ' + formatDate();
     document.getElementById('pdfTotalPct').textContent = (isFinite(totals.pct) ? totals.pct : '—') + '%';
-    document.getElementById('pdfTotalRaw').textContent = (totals.raw||0) + ' of ' + ((S.questions||[]).length * 5 || 175) + ' POINTS';
+   document.getElementById('pdfTotalRaw').textContent =(totals.raw || 0) + ' of ' + ((S.questions || []).length * 5 || 175);
 // === PDF recommendation band (under the date) ===
 (function(){
   const recTarget = document.getElementById('pdfBandText');
