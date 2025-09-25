@@ -606,7 +606,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     </p>
 <h2 class="section-title">RATING</h2>
 <ul class="scale-list" style="list-style:none; padding:0; margin:10px 0">
-<li class="scale-item" style="display:flex; align-items:center; gap:10px; margin:8px 0; font-size:12pt"><span class="badge" style="width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700">1</span> <span>I am not sogood at this</span></li>
+<li class="scale-item" style="display:flex; align-items:center; gap:10px; margin:8px 0; font-size:12pt"><span class="badge" style="width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700">1</span> <span>I am not so good at this</span></li>
 <li class="scale-item" style="display:flex; align-items:center; gap:10px; margin:8px 0; font-size:12pt"><span class="badge" style="width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700">2</span> <span>I need to be better at this</span></li>
 <li class="scale-item" style="display:flex; align-items:center; gap:10px; margin:8px 0; font-size:12pt"><span class="badge" style="width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700">3</span> <span>I am average at this</span></li>
 <li class="scale-item" style="display:flex; align-items:center; gap:10px; margin:8px 0; font-size:12pt"><span class="badge" style="width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700">4</span> <span>I am good at this</span></li>
@@ -936,8 +936,8 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   show = function(id) {
     _oldShow(id);
     if (!subheaderEl) return;
-    if (id === 'q1') { subheaderEl.textContent = 'STATEMENTS PART 1'; } 
-    else if (id === 'q2') { subheaderEl.textContent = 'STATEMENTS PART 2'; } 
+    if (id === 'q1') { subheaderEl.textContent = 'STATEMENTS PART ONE'; } 
+    else if (id === 'q2') { subheaderEl.textContent = 'STATEMENTS PART TWO'; } 
     else if (id === 'congrats') { subheaderEl.textContent = 'TEAM MEMBER FORM'; } 
     else { subheaderEl.textContent = 'TEAM MEMBER FORM'; }
   };
