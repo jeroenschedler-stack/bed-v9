@@ -751,7 +751,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 
 <!-- Overall Score section -->
 <div class="sec-h assess-bar"><span class="lbl-group">OVERALL SCORE</span></div>
-<div id="pdfBandText" style="margin-top:5px;font-size:16px;font-weight:600;color:#2F2F2F;width:100%;display:block;text-align:left;line-height:1.4;"></div>
+<div id="pdfBandText" style="margin-top:10px;font-size:16px;font-weight:600;color:#434343;width:100%;display:block;text-align:left;line-height:1.7;"></div>
 
 <!-- Score by Group section -->
 <div class="sec-h assess-bar"><span class="lbl-group">SCORE BY GROUP</span></div>
@@ -971,15 +971,20 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   } else {
     rec = 'Awesome! Your understanding of BED is an inspiration for others. Continue to lead others by example';
   }
-  recTarget.innerHTML = "Your overall assessment score is " + totals.pct + "% and here are our recommendations:<br>" + rec;
+
+  recTarget.innerHTML = 
+    "<div style='line-height:1.5; font-size:12px; color:#737373; font-weight:400;'>Your overall score is " 
+    + totals.pct + "% — so what does it mean?</div>" +
+    "<div style='font-size:12px; color:#434343; font-weight:600;'>" + rec + "</div>";
+
+  // Info
+  document.getElementById('pdfEmpName').textContent = document.getElementById('nick').value || '';
+  document.getElementById('pdfEmpEmail').textContent = document.getElementById('email').value || '';
+  document.getElementById('pdfEmpHotel').textContent = document.getElementById('hotel').value || '';
+  document.getElementById('pdfPeerName').textContent = document.getElementById('peerName').value || '';
+  document.getElementById('pdfPeerEmail').textContent = document.getElementById('peerEmail').value || '';
+  document.getElementById('pdfPeerHotel').textContent = document.getElementById('peerHotel').value || '';
 })();
-    // Info
-    document.getElementById('pdfEmpName').textContent = document.getElementById('nick').value || '';
-    document.getElementById('pdfEmpEmail').textContent = document.getElementById('email').value || '';
-    document.getElementById('pdfEmpHotel').textContent = document.getElementById('hotel').value || '';
-    document.getElementById('pdfPeerName').textContent = document.getElementById('peerName').value || '';
-    document.getElementById('pdfPeerEmail').textContent = document.getElementById('peerEmail').value || '';
-    document.getElementById('pdfPeerHotel').textContent = document.getElementById('peerHotel').value || '';
 
     // Group rows
     const gp = computeGroupPercents();
