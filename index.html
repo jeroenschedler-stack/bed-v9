@@ -579,8 +579,8 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </select>
 </div>
 <h2 class="section-title">peer information</h2>
-<p class="intro">after you assess yourself one of your friends will review you. this is called peer review. your peer must know you well and worked in BED for at least 12 months</p>
-<div class="row"><label for="peerName">name peer</label><input id="peerName"/></div>
+<p class="intro">after you assess yourself another team member will assess you as well. Your peer reviewer must know you well and must have been in BED for at least 12 months</p>
+<div class="row"><label for="peerName">peer reviewer</label><input id="peerName"/></div>
 <div class="row"><label for="peerEmail">email peer</label><input id="peerEmail" type="email"/></div>
 <div class="row"><label for="peerHotel">peer location</label>
 <select id="peerHotel" required="">
@@ -601,11 +601,11 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <section id="instructions" style="display:none">
 <h2 class="section-title">SELF-ASSESSMENT</h2>
 <p class="intro">
-      Read each statement and think how you act in these situations. Then select the rating that best fits you. Be honest with yourself. The goal is to know what you're good at and what you could do better
+      Read each statement and think how you act in these situations. Then select the rating that best fits you. Be honest with yourself. The goal is to know what you're good at and what you can do better
     </p>
 <h2 class="section-title">RATING</h2>
 <ul class="scale-list" style="list-style:none; padding:0; margin:10px 0">
-<li class="scale-item" style="display:flex; align-items:center; gap:10px; margin:8px 0; font-size:12pt"><span class="badge" style="width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700">1</span> <span>I am not good at this</span></li>
+<li class="scale-item" style="display:flex; align-items:center; gap:10px; margin:8px 0; font-size:12pt"><span class="badge" style="width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700">1</span> <span>I am not sogood at this</span></li>
 <li class="scale-item" style="display:flex; align-items:center; gap:10px; margin:8px 0; font-size:12pt"><span class="badge" style="width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700">2</span> <span>I need to be better at this</span></li>
 <li class="scale-item" style="display:flex; align-items:center; gap:10px; margin:8px 0; font-size:12pt"><span class="badge" style="width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700">3</span> <span>I am average at this</span></li>
 <li class="scale-item" style="display:flex; align-items:center; gap:10px; margin:8px 0; font-size:12pt"><span class="badge" style="width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700">4</span> <span>I am good at this</span></li>
@@ -635,7 +635,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </div>
 </section>
 <!-- Score -->
-<section id="finish" style="display:none"><div class="score-section"><div class="score-kicker">your self assessment scores</div><div class="score-big" id="scorePercent"> —%</div><div class="gauge" id="gauge"></div><div class="rec-kicker"></div><div class="rec-text" id="recText">—</div></div>
+<section id="finish" style="display:none"><div class="score-section"><div class="score-kicker">team member self assessment score</div><div class="score-big" id="scorePercent"> —%</div><div class="gauge" id="gauge"></div><div class="rec-kicker"></div><div class="rec-text" id="recText">—</div></div>
 <br/>
 <div id="groupResultsContainer" style="margin-top:18px">
 <div class="group-summary">
@@ -678,9 +678,10 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </style>
 <div class="big-check"></div>
 <div class="center">
-  <h3 style="font-size:32px; margin:8px 0 6px 0; color:#373737;">self-assessment<br>completed
-  </h3>
-<p style="font-size:18px; color:#374151">Click PDF to download the report<br>Send the review form to your peer</p>
+ <h3 style="font-size:32px; margin:8px 0 6px 0; color:#F2F2F2;">
+  self-assessment<br><span style="font-size:34px;">completed</span>
+</h3>
+<p style="font-size:16px; color:#F2F2F2; line-height:1.6;">Click PDF to download the report<br>Send review form to your peer reviewer</p>
 </div>
   <br>
   <br>
@@ -697,7 +698,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <div class="modal-backdrop" id="eligBackdrop" style="position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:50">
 <div class="modal" style="width:min(92vw,520px); background:#fff; border-radius:18px; padding:20px; box-shadow:0 20px 60px rgba(0,0,0,.25)">
 <h3 style="margin:0 0 10px 0; font-size:18px">please confirm</h3>
-<p style="margin:0 0 18px 0; font-size:16px; line-height:1.5; color:#222">my peer reviewer knows me well and worked in BED for at least 12 months</p>
+<p style="margin:0 0 18px 0; font-size:16px; line-height:1.5; color:#222">my peer reviewer knows me well and has been in BED for at least 12 months</p>
 <div class="row-btns" style="display:flex; justify-content:flex-end; gap:10px">
 <button class="btn-secondary" id="eligCancel">Cancel</button>
 <button id="eligOk">OK</button>
