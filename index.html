@@ -749,7 +749,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </div>
 
 
-<!-- Overall Score section -->
+<!--  section -->
 <div class="sec-h assess-bar"><span class="lbl-group">OVERALL SCORE</span></div>
 <div id="pdfBandText" style="margin-top:10px;font-size:16px;font-weight:600;color:#434343;width:100%;display:block;text-align:left;line-height:1.7;"></div>
 
@@ -973,9 +973,9 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   }
 
   recTarget.innerHTML = 
-    "<div style='line-height:1.5; font-size:12px; color:#737373; font-weight:400;'>Your overall score is " 
+    "<div style='line-height:1.8; font-size:14px; color:#434343; font-weight:400;'>Your overall score is " 
     + totals.pct + "% — so what does it mean?</div>" +
-    "<div style='font-size:12px; color:#434343; font-weight:600;'>" + rec + "</div>";
+    "<div style='font-size:14px; color:#434343; font-weight:600;'>" + rec + "</div>";
 
   // Info
   document.getElementById('pdfEmpName').textContent = document.getElementById('nick').value || '';
