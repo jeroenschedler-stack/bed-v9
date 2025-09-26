@@ -68,7 +68,7 @@
     },
     {
       "id": 9,
-      "statement": "I dont show stress when there is a problem",
+      "statement": "I don't show stress when there is a problem",
       "subtext": "I know that makes guests really worry",
       "group": "BED competencies"
     },
@@ -93,7 +93,7 @@
     {
       "id": 13,
       "statement": "I scan every guest every time",
-      "subtext": "I dont look at a group but at each individual",
+      "subtext": "I don't look at a group but at each individual",
       "group": "BED competencies"
     },
     {
@@ -140,7 +140,7 @@
     },
     {
       "id": 21,
-      "statement": "My friends often give me honest feedback",
+      "statement": "I like it when my friends give me honest feedback",
       "subtext": "I'm happy they help me to grow",
       "group": "Collaboration"
     },
@@ -159,7 +159,7 @@
     {
       "id": 24,
       "statement": "I have peeled my own onion",
-      "subtext": "I dont act. Usually I show my true self",
+      "subtext": "I don't act. Usually I show my true self",
       "group": "BED competencies"
     },
     {
@@ -183,7 +183,7 @@
     {
       "id": 28,
       "statement": "I never gossip. I signed I Promise",
-      "subtext": "I dont talk badly when someones not here",
+      "subtext": "I don't talk badly when someones not here",
       "group": "Collaboration"
     },
     {
@@ -224,8 +224,8 @@
     },
     {
       "id": 35,
-      "statement": "I have no manuals that show me what to do",
-      "subtext": "I use common sense to make decisions",
+      "statement": "I use passion and common sense",
+      "subtext": "I always try to do the right thing",
       "group": "Taking ownership"
     }
   ]
