@@ -178,8 +178,8 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     /* Title block */
     .pdf-top{display:grid; grid-template-columns: 1fr 220px; gap:16px; align-items:start; margin-bottom:10px}
     .pdf-title{font-size:45px; font-weight:1000; color:var(--blue); margin:0}
-    .pdf-sub { font-size:25px; font-weight:600; color:var(--blue); margin:2px 0; line-height:1.2; text-align:left; }
-    .pdf-date { font-size:25px; font-weight:600; color:var(--blue); margin:2px 0; line-height:1.2; text-align:left; }
+    .pdf-sub { font-size:30px; font-weight:600; color:var(--blue); margin:2px 0; line-height:1.2; text-align:left; }
+    .pdf-date { font-size:18px; font-weight:500; color:var(--blue); margin:2px 0; line-height:1.2; text-align:left; }
     .pdf-divider{height:1px; background:#cfd4dc; margin:8px 0 14px 0}
 
     /* ====== SCORE BOX (SAFE TO EDIT) ====== */
@@ -548,6 +548,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     margin: 16px 0 8px 0 !important; /* restore standard sec-h margins for visual consistency */
   }
 }
+
 </style><style>
 /* === FINAL fixes v72: Match blue header height for STATEMENTS to other bars (screen + print) === */
 #pdfReport .statements-bar {
@@ -580,7 +581,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </select>
 </div>
 <h2 class="section-title">peer reviewer information</h2>
-<p class="intro">after you assess yourself a peer will review you. your peer must know you well and worked in BED for at least 12 months</p>
+<p class="intro">after you assess yourself a peer will review you. Choose any peer who knows you well and has worked in BED for at least 12 months</p>
 <div class="row"><label for="peerName">peer reviewer</label><input id="peerName"/></div>
 <div class="row"><label for="peerEmail">email peer</label><input id="peerEmail" type="email"/></div>
 <div class="row"><label for="peerHotel">peer location</label>
@@ -680,7 +681,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <div class="big-check"></div>
 <div class="center">
  <h3 style="font-size:32px; margin:8px 0 6px 0; color:#444;">self-assessment<br>completed</h3>
-<p style="font-size:16px; font-weight: 500;color:#444; line-height:1.5;">click PDF to download the report<br>please send the review form to your peer
+<p style="font-size:17px; font-weight: 500;color:#444; line-height:1.4;">click PDF to download the report<br>please send the <a href="https://jeroenschedler-stack.github.io/peer-review-form/" target="_blank">review form</a> to  your peer 
 </p>
 </div>
   <br>
@@ -698,7 +699,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 <div class="modal-backdrop" id="eligBackdrop" style="position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:50">
 <div class="modal" style="width:min(92vw,520px); background:#fff; border-radius:18px; padding:20px; box-shadow:0 20px 60px rgba(0,0,0,.25)">
 <h3 style="margin:0 0 10px 0; font-size:18px">please confirm</h3>
-<p style="margin:0 0 18px 0; font-size:16px; line-height:1.5; color:#222">my peer reviewer knows me well and has worked in BED for at least 12 months</p>
+<p style="margin:0 0 18px 0; font-size:16px; line-height:1.5; color:#222">my peer reviewer knows me well and worked in BED for at least 12 months</p>
 <div class="row-btns" style="display:flex; justify-content:flex-end; gap:10px">
 <button class="btn-secondary" id="eligCancel">Cancel</button>
 <button id="eligOk">OK</button>
@@ -710,8 +711,8 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
   <div class="pdf-top">
     <div>
        <div class="pdf-title">BED HOSPITALITY 2.0</div>
-  <div class="pdf-sub">TEAM MEMBER REPORT</div>
-  <div class="pdf-date" id="pdfDate">ASSESSMENT DATE —</div>
+  <div class="pdf-sub">team member report</div>
+  <div class="pdf-date" id="pdfDate">assessment date —</div>
     </div>
     <div class="score-box">
       <div class="pct" id="pdfTotalPct">—%</div>
@@ -750,8 +751,8 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 
 
 <!--  section -->
-<div class="sec-h assess-bar"><span class="lbl-group">OVERALL SCORE</span></div>
-<div id="pdfBandText" style="margin-top:10px;font-size:16px;font-weight:600;color:#434343;width:100%;display:block;text-align:left;line-height:1.7;"></div>
+<div class="sec-h assess-bar"><span class="lbl-group">SCORE SUMMARY</span></div>
+<div id="pdfBandText" style="margin-top:10px;font-size:16px;font-weight:600;color:#434343;width:100%;display:block;text-align:left;line-height:1.5;"></div>
 
 <!-- Score by Group section -->
 <div class="sec-h assess-bar"><span class="lbl-group">SCORE BY GROUP</span></div>
@@ -818,10 +819,10 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
     }catch(e){
       S.questions = []; 
       S.groups = [
-        {"name":"hospitality skills","description":"Practical service actions and daily guest care done the BED way."},
+        {"name":"Hospitality skills","description":"Practical service actions and daily guest care done the BED way."},
         {"name":"BED competencies","description":"Reading people and situations; proactive judgement; turning intent into consistent action."},
-        {"name":"taking ownership","description":"Acting independently, fixing problems, and sharing responsibility for outcomes."},
-        {"name":"collaboration","description":"Building trust, communicating clearly, and helping across the BED community."}
+        {"name":"Taking ownership","description":"Acting independently, fixing problems, and sharing responsibility for outcomes."},
+        {"name":"Collaboration","description":"Building trust, communicating clearly, and helping across the BED community."}
       ];
     }
   }
@@ -930,6 +931,8 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   });
   validateWelcome();
 
+
+
   // Subheader update
   const subheaderEl = document.querySelector('p.subheader');
   const _oldShow = show;
@@ -954,7 +957,7 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   function buildPdfReport(){
     // Date + score box
     const totals = computeTotals();
-    document.getElementById('pdfDate').textContent = 'REPORT DATE ' + formatDate();
+    document.getElementById('pdfDate').textContent = 'assessment date ' + formatDate();
     document.getElementById('pdfTotalPct').textContent = (isFinite(totals.pct) ? totals.pct : '—') + '%';
    document.getElementById('pdfTotalRaw').textContent =(totals.raw || 0) + ' of ' + ((S.questions || []).length * 5 || 175);
 // === PDF recommendation band (under the date) ===
@@ -972,10 +975,10 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
     rec = 'Awesome! Your understanding of BED is an inspiration for others. Continue to lead others by example';
   }
 
-  recTarget.innerHTML = 
-    "<div style='line-height:1.8; font-size:14px; color:#434343; font-weight:400;'>Your overall score is " 
-    + totals.pct + "% — so what does it mean?</div>" +
-    "<div style='font-size:14px; color:#434343; font-weight:600;'>" + rec + "</div>";
+recTarget.innerHTML = 
+  "<div style='line-height:1.5; font-size:16px; color:#434343; font-weight:600;'>Your overall score is " 
+  + totals.pct + "%. You scored " + totals.raw + " out of " + ((S.questions||[]).length * 5 || 175) + " points. So what does that mean?</div>" +
+  "<div style='font-size:16px; color:#434343; font-weight:600;'>" + rec + "</div>";
 
   // Info
   document.getElementById('pdfEmpName').textContent = document.getElementById('nick').value || '';
@@ -1235,12 +1238,12 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
 <script>
 (function(){
   const MAP = {
-    "Hospitality Skills": "hospitality skills",
+    "Hospitality Skills": "Hospitality skills",
     "Hospitality Competencies": "BED competencies",
-    "Taking Ownership": "taking ownership",
-    "Collaboration": "collaboration"
+    "Taking Ownership": "Taking ownership",
+    "Collaboration": "Collaboration"
   };
-  const TARGET_ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+  const TARGET_ORDER = ["Hospitality skills","BED competencies","Taking ownership","Collaboration"];
   function normalizeData(){
     const S = window.__S || window.S;
     if (!S || !Array.isArray(S.groups) || !Array.isArray(S.questions)) return false;
@@ -1252,14 +1255,14 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   function replaceOldLabelsIn(container){
     if (!container) return;
     const TEXT_MAP = {
-      "Hospitality Skills": "hospitality skills",
+      "Hospitality Skills": "Hospitality skills",
       "Hospitality Competencies": "BED competencies",
-      "Taking Ownership": "taking ownership",
-      "Collaboration": "collaboration",
+      "Taking Ownership": "Taking ownership",
+      "Collaboration": "Collaboration",
       "Score Hospitality Skills": "Score hospitality skills",
       "Score Hospitality Competencies": "Score BED competencies",
       "Score Taking Ownership": "Score taking ownership",
-      "Score Collaboration": "Score collaboration"
+      "Score Collaboration": "Score Collaboration"
     };
     const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
     let n;
@@ -1295,12 +1298,12 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
 (function(){
   // Map old->new
   const MAP = {
-    "Hospitality Skills": "hospitality skills",
+    "Hospitality Skills": "Hospitality skills",
     "Hospitality Competencies": "BED competencies",
-    "Taking Ownership": "taking ownership",
-    "Collaboration": "collaboration"
+    "Taking Ownership": "Taking ownership",
+    "Collaboration": "Collaboration"
   };
-  const TARGET_ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+  const TARGET_ORDER = ["Hospitality skills","BED competencies","Taking ownership","Collaboration"];
 
   function normalizedOrder(S){
     const byName = new Map();
@@ -1371,12 +1374,12 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
 // === Final normalization & rendering vFinal ===
 (function(){
   const MAP = {
-    "Hospitality Skills":"hospitality skills",
+    "Hospitality Skills":"Hospitality skills",
     "Hospitality Competencies":"BED competencies",
-    "Taking Ownership":"taking ownership",
-    "Collaboration":"collaboration"
+    "Taking Ownership":"Taking ownership",
+    "Collaboration":"Collaboration"
   };
-  const ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+  const ORDER = ["Hospitality skills","BED competencies","Taking ownership","Collaboration"];
 
   function normalizeAll(){
     const S = window.__S || window.S || {};
@@ -1440,17 +1443,17 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
 // === Strong patch v2: force-normalize + recompute group % independent of S.groups ===
 (function(){
   const MAP = {
-    "Hospitality Skills":"hospitality skills",
+    "Hospitality Skills":"Hospitality skills",
     "Hospitality Competencies":"BED competencies",
-    "Taking Ownership":"taking ownership",
-    "Collaboration":"collaboration"
+    "Taking Ownership":"Taking ownership",
+    "Collaboration":"Collaboration"
   };
-  const ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+  const ORDER = ["Hospitality skills","BED competencies","Taking ownership","Collaboration"];
   const DESC_FALLBACK = {
-    "hospitality skills":"Practical service actions and daily guest care done the BED way.",
+    "Hospitality skills":"Practical service actions and daily guest care done the BED way.",
     "BED competencies":"Reading people and situations; proactive judgement; turning intent into consistent action.",
-    "taking ownership":"Acting independently, fixing problems, and sharing responsibility for outcomes.",
-    "collaboration":"Building trust, communicating clearly, and helping across the BED community."
+    "Taking ownership":"Acting independently, fixing problems, and sharing responsibility for outcomes.",
+    "Collaboration":"Building trust, communicating clearly, and helping across the BED community."
   };
 
   function normName(n){ return MAP[n] || n; }
@@ -1559,17 +1562,17 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
 // === Final hot-fix v3 (must be the last script) ===
 (function(){
   const MAP = {
-    "Hospitality Skills":"hospitality skills",
+    "Hospitality Skills":"Hospitality skills",
     "Hospitality Competencies":"BED competencies",
-    "Taking Ownership":"taking ownership",
-    "Collaboration":"collaboration"
+    "Taking Ownership":"Taking ownership",
+    "Collaboration":"Collaboration"
   };
-  const ORDER = ["hospitality skills","BED competencies","taking ownership","collaboration"];
+  const ORDER = ["Hospitality skills","BED competencies","Taking ownership","Collaboration"];
   const DESC = {
-    "hospitality skills":"Practical service actions and daily guest care done the BED way.",
+    "Hospitality skills":"Practical service actions and daily guest care done the BED way.",
     "BED competencies":"Reading people and situations; proactive judgement; turning intent into consistent action.",
-    "taking ownership":"Acting independently, fixing problems, and sharing responsibility for outcomes.",
-    "collaboration":"Building trust, communicating clearly, and helping across the BED community."
+    "Taking ownership":"Acting independently, fixing problems, and sharing responsibility for outcomes.",
+    "Collaboration":"Building trust, communicating clearly, and helping across the BED community."
   };
   const norm = n => MAP[n] || n;
 
@@ -1684,3 +1687,4 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
 </script>
 </body>
 </html>
+
