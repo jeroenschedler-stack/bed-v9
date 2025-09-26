@@ -19,7 +19,7 @@
   /* --- STATEMENTS header bar alignment --- */
   #pdfReport .statements-bar {
     display: grid !important;
-    grid-template-columns: 10% 45% 30% 15% !important; /* NO | STATEMENT | GROUP | SCORE */
+    grid-template-columns: 10% 55% 20% 15% !important; /* NO | STATEMENT | GROUP | SCORE */
     align-items: center !important;
     padding: 6px 10px !important;
   }
@@ -763,7 +763,7 @@ button:disabled{background:#ccc; color:#666; cursor:not-allowed;}
 </div>
 
   <!-- Statements -->
-  <div class="sec-h statements-bar"><span class="lbl-stmt">STATEMENTS</span><span class="lbl-group">GROUP</span><span class="lbl-score">SCORE</span></div>
+<div class="sec-h statements-bar"><span class="lbl-stmt" style="display:block;">STATEMENTS</span><span class="lbl-group" style="display:block;">GROUP</span><span class="lbl-score" style="display:block;">SCORE</span></div>
   <div class="card" style="padding:0">
     <table id="pdfStatements">
       <thead> ... </thead>
@@ -976,8 +976,8 @@ else rec='Awesome! Your understanding of BED is an inspiration for others. Conti
   }
 
 recTarget.innerHTML = 
-  "<div style='line-height:1.5; font-size:16px; color:#434343; font-weight:600;'>Your overall score is " 
-  + totals.pct + "%. You scored " + totals.raw + " out of " + ((S.questions||[]).length * 5 || 175) + " points. So what does that mean?</div>" +
+  "<div style='line-height:1.4; font-size:16px; color:#434343; font-weight:600;'>Your overall score is " 
+  + totals.pct + "% based on " + totals.raw + " out of " + ((S.questions||[]).length * 5 || 175) + " points. Here's what that means:</div>" +
   "<div style='font-size:16px; color:#434343; font-weight:600;'>" + rec + "</div>";
 
   // Info
