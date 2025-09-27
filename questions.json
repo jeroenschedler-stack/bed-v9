@@ -182,14 +182,14 @@
     },
     {
       "id": 28,
-      "statement": "I never gossip. I signed I Promise",
+      "statement": "I never gossip. I promised that",
       "subtext": "I don't talk badly when someones not here",
       "group": "Collaboration"
     },
     {
       "id": 29,
       "statement": "I really understand that rules can be flexible",
-      "subtext": "Without reasons many rules just disappear",
+      "subtext": "I only apply rules when it's needed",
       "group": "Taking ownership"
     },
     {
@@ -207,7 +207,7 @@
     {
       "id": 32,
       "statement": "I look around when I arrive at the hotel",
-      "subtext": "I share responsibility for the whole hotel",
+      "subtext": "I take responsibility for our house",
       "group": "Taking ownership"
     },
     {
@@ -218,8 +218,8 @@
     },
     {
       "id": 34,
-      "statement": "I am not afraid of the CEO or my coach",
-      "subtext": "I know I am allowed to make mistakes",
+      "statement": "I know I am allowed to make mistakes",
+      "subtext": "I am not afraid I get punished ",
       "group": "Taking ownership"
     },
     {
