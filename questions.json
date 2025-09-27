@@ -153,7 +153,7 @@
     {
       "id": 23,
       "statement": "I understand the meaning of showtime",
-      "subtext": "The magic happens from 0700-1000",
+      "subtext": "The magic happens from 07:00-10:00",
       "group": "Hospitality skills"
     },
     {
@@ -225,7 +225,7 @@
     {
       "id": 35,
       "statement": "I use passion and common sense",
-      "subtext": "I always try to do the right thing",
+      "subtext": "I know there are no manuals",
       "group": "Taking ownership"
     }
   ]
