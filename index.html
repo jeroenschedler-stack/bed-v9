@@ -332,10 +332,6 @@
             /* PDF: lock Statements table column widths */
             @media print {
               #pdfReport .statements-table { table-layout: fixed; width: 100%; }
-              #pdfReport .statements-table col:nth-child(1) { width: 10%; }
-              #pdfReport .statements-table col:nth-child(2) { width: 50%; }
-              #pdfReport .statements-table col:nth-child(3) { width: 20%; }
-              #pdfReport .statements-table col:nth-child(4) { width: 20%; }
             }
 
             /* PDF: lock Information section to 20/30/20/30 total width */
@@ -369,36 +365,6 @@
                 break-inside: avoid;
               }
             }
-
-            /* PDF: lock Statements table columns to 10/45/30/15 */
-            @media print {
-              #pdfReport .statements-table { table-layout: fixed; width: 100%; }
-              #pdfReport .statements-table col:nth-child(1) { width: 10%; }
-              #pdfReport .statements-table col:nth-child(2) { width: 45%; }
-              #pdfReport .statements-table col:nth-child(3) { width: 30%; }
-              #pdfReport .statements-table col:nth-child(4) { width: 15%; }
-            }
-
-            /* PDF: Statements header bar with STATEMENTS, GROUP, SCORE */
-            @media print {
-              #pdfReport .statements-bar {
-                display: grid;
-                grid-template-columns: 10% 45% 30% 15%; /* NO / STATEMENT / GROUP / RATING */
-                align-items: center;
-              }
-              #pdfReport .statements-bar .lbl-stmt { grid-column: 2; text-align: left; }
-              #pdfReport .statements-bar .lbl-group { grid-column: 3; text-align: left; }
-              #pdfReport .statements-bar .lbl-score { grid-column: 4; text-align: center; }
-            }
-
-            /* PDF: Refine Statements section alignment */
-            @media print {
-              /* Header bar grid still uses locked column widths */
-              #pdfReport .statements-bar {
-                display: grid;
-                grid-template-columns: 10% 45% 30% 15%;
-                align-items: center;
-              }
               /* Align STATEMENTS over NO column (left with numbers) */
               #pdfReport .statements-bar .lbl-stmt { grid-column: 1; text-align: left; }
               /* Align GROUP over Group col, left aligned */
@@ -425,13 +391,6 @@
               #pdfReport .statements-bar span {
                 margin: 0 !important;
                 padding: 0 !important;
-              }
-
-              /* Reaffirm grid alignment */
-              #pdfReport .statements-bar {
-                display: grid;
-                grid-template-columns: 10% 45% 30% 15%;
-                align-items: center;
               }
               #pdfReport .statements-bar .lbl-stmt { grid-column: 1; text-align: left; }
               #pdfReport .statements-bar .lbl-group { grid-column: 3; text-align: left; }
@@ -478,28 +437,10 @@
         <style>
             /* === FINAL fixes v68: Statements duplicate header removal + header alignment (print only) === */
             @media print {
-                /* Lock one set of column widths for statements table */
-                #pdfReport #pdfStatements {
-                    table-layout: fixed;
-                    width: 100%;
-                }
-                #pdfReport #pdfStatements col:nth-child(1) {
-                    width: 10% !important;
-                }
-                #pdfReport #pdfStatements col:nth-child(2) {
-                    width: 45% !important;
-                }
-                #pdfReport #pdfStatements col:nth-child(3) {
-                    width: 30% !important;
-                }
-                #pdfReport #pdfStatements col:nth-child(4) {
-                    width: 15% !important;
-                }
 
                 /* Align blue header bar labels with table columns */
                 #pdfReport .statements-bar {
                     display: grid !important;
-                    grid-template-columns: 10% 45% 30% 15% !important; /* NO / STATEMENT / GROUP / RATING */
                     column-gap: 0 !important;
                     padding: 0 !important;
                     margin: 0 !important;
@@ -538,7 +479,6 @@
             /* === FINAL fixes v70: Blue section header alignment (screen + print) === */
             #pdfReport .statements-bar {
                 display: grid !important;
-                grid-template-columns: 10% 45% 30% 15% !important; /* NO. | STATEMENT | GROUP | SCORE */
                 column-gap: 0 !important;
                 align-items: center !important;
             }
@@ -614,19 +554,41 @@
             }
 
             /* Utility for hidden headings (used in pdfReport section) */
-            .visually-hidden {
-                position: absolute !important;
-                width: 1px;
-                height: 1px;
-                padding: 0;
-                margin: -1px;
-                overflow: hidden;
-                clip: rect(0, 0, 0, 0);
-                white-space: nowrap;
-                border: 0;
-            }
-        </style>
-    </head>
+   .visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+/* end of this style block */
+</style>
+
+  <!-- your other CSS and scripts -->
+
+  <style>
+  /* === FINAL canonical widths for Statements: 10 / 55 / 20 / 15 === */
+
+  #pdfReport .statements-bar {
+    display: grid !important;
+    grid-template-columns: 10% 55% 20% 15% !important;
+    align-items: center !important;
+    padding: 6px 10px !important;
+  }
+
+  @media print {
+    #pdfReport .statements-table { table-layout: fixed; width:100%; }
+    #pdfReport .statements-table col:nth-child(1){ width:10% !important; }
+    #pdfReport .statements-table col:nth-child(2){ width:55% !important; }
+    #pdfReport .statements-table col:nth-child(3){ width:20% !important; }
+    #pdfReport .statements-table col:nth-child(4){ width:15% !important; }
+  }
+  </style>
+</head>
     <body>
         <main class="container">
             <h1>BED HOSPITALITY 2.0</h1>
@@ -855,17 +817,23 @@
             </div>
             <div class="card" style="padding: 0;">
                 <table id="pdfStatements">
-                    <thead>
-                        <tr>
-                            <th>STATEMENTS</th>
-                            <th>GROUP</th>
-                            <th>SCORE</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pdfStatementRows">
-                        <!-- rows injected -->
-                    </tbody>
-                </table>
+  <colgroup>
+    <col />  <!-- NO -->
+    <col />  <!-- STATEMENT -->
+    <col />  <!-- GROUP -->
+    <col />  <!-- SCORE -->
+  </colgroup>
+  <thead>
+    <tr>
+      <th>NO</th>
+      <th>STATEMENT</th>
+      <th>GROUP</th>
+      <th>SCORE</th>
+    </tr>
+  </thead>
+  <tbody id="pdfStatementRows"><!-- rows injected --></tbody>
+</table>
+
             </div>
         </section>
         <script>
