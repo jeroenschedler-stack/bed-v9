@@ -901,7 +901,7 @@
 
                 async function loadQuestions() {
                     try {
-                        const res = await fetch("../data/questions_team.json", { cache: "no-store" });
+                       const res = await fetch("questions.json?v=" + Date.now(), { cache: "no-store" });
                         if (!res.ok) throw new Error("fetch failed");
                         const data = await res.json();
                         S.questions = data.questions || [];
@@ -909,10 +909,10 @@
                     } catch (e) {
                         S.questions = [];
                         S.groups = [
-                            { name: "Hospitality skills", description: "Practical service actions and daily guest care done the BED way." },
-                            { name: "BED competencies", description: "Reading people and situations; proactive judgement; turning intent into consistent action." },
-                            { name: "Taking ownership", description: "Acting independently, fixing problems, and sharing responsibility for outcomes." },
-                            { name: "Collaboration", description: "Building trust, communicating clearly, and helping across the BED community." },
+                            { name: "Hospitality skills", description: "Standard skills for daily tasks and guest services" },
+                            { name: "BED competencies", description: "Advanced abilities to read people and situations" },
+                            { name: "Taking ownership", description: "Acting independently and sharing responsibility" },
+                            { name: "Collaboration", description: "Building trust and helping others across BED" },
                         ];
                     }
                 }
@@ -964,7 +964,7 @@
                     if (!holder) return;
                     const gp = computeGroupPercents();
                     const desc = groupDescMap();
-                    const order = ["Hospitality Skills", "Hospitality Competencies", "Taking Ownership", "Collaboration"];
+                    const order = ["Hospitality skills", "Hospitality competencies", "Taking ownership", "Collaboration"];
                     let rows = "";
                     order.forEach((name) => {
                         const p = gp[name] ?? 0;
@@ -1123,7 +1123,7 @@
                     // Group rows
                     const gp = computeGroupPercents();
                     const descMap = groupDescMap();
-                    const order = ["Hospitality Skills", "Hospitality Competencies", "Taking Ownership", "Collaboration"];
+                    const order = ["Hospitality skills", "Hospitality competencies", "Taking ownership", "Collaboration"];
                     const body = document.getElementById("pdfGroupRows");
                     body.innerHTML = "";
                     order.forEach((name) => {
@@ -1455,7 +1455,7 @@
         <script>
             (function () {
                 const MAP = {
-                    "Hospitality Skills": "Hospitality skills",
+                    "Hospitality skills": "Hospitality skills",
                     "Hospitality Competencies": "BED competencies",
                     "Taking Ownership": "Taking ownership",
                     Collaboration: "Collaboration",
@@ -1476,13 +1476,13 @@
                 function replaceOldLabelsIn(container) {
                     if (!container) return;
                     const TEXT_MAP = {
-                        "Hospitality Skills": "Hospitality skills",
-                        "Hospitality Competencies": "BED competencies",
-                        "Taking Ownership": "Taking ownership",
+                        "Hospitality skills": "Hospitality skills",
+                        "Hospitality competencies": "BED competencies",
+                        "Taking ownership": "Taking ownership",
                         Collaboration: "Collaboration",
-                        "Score Hospitality Skills": "Score hospitality skills",
-                        "Score Hospitality Competencies": "Score BED competencies",
-                        "Score Taking Ownership": "Score taking ownership",
+                        "Score Hospitality skills": "Score hospitality skills",
+                        "Score Hospitality competencies": "Score BED competencies",
+                        "Score Taking ownership": "Score taking ownership",
                         "Score Collaboration": "Score Collaboration",
                     };
                     const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
@@ -1525,9 +1525,9 @@
             (function () {
                 // Map old->new
                 const MAP = {
-                    "Hospitality Skills": "Hospitality skills",
-                    "Hospitality Competencies": "BED competencies",
-                    "Taking Ownership": "Taking ownership",
+                    "Hospitality skills": "Hospitality skills",
+                    "Hospitality competencies": "BED competencies",
+                    "Taking ownership": "Taking ownership",
                     Collaboration: "Collaboration",
                 };
                 const TARGET_ORDER = ["Hospitality skills", "BED competencies", "Taking ownership", "Collaboration"];
@@ -1612,9 +1612,9 @@
             // === Final normalization & rendering vFinal ===
             (function () {
                 const MAP = {
-                    "Hospitality Skills": "Hospitality skills",
-                    "Hospitality Competencies": "BED competencies",
-                    "Taking Ownership": "Taking ownership",
+                    "Hospitality skills": "Hospitality skills",
+                    "Hospitality competencies": "BED competencies",
+                    "Taking ownership": "Taking ownership",
                     Collaboration: "Collaboration",
                 };
                 const ORDER = ["Hospitality skills", "BED competencies", "Taking ownership", "Collaboration"];
@@ -1700,17 +1700,17 @@
             // === Strong patch v2: force-normalize + recompute group % independent of S.groups ===
             (function () {
                 const MAP = {
-                    "Hospitality Skills": "Hospitality skills",
-                    "Hospitality Competencies": "BED competencies",
-                    "Taking Ownership": "Taking ownership",
+                    "Hospitality skills": "Hospitality skills",
+                    "Hospitality competencies": "BED competencies",
+                    "Taking ownership": "Taking ownership",
                     Collaboration: "Collaboration",
                 };
                 const ORDER = ["Hospitality skills", "BED competencies", "Taking ownership", "Collaboration"];
                 const DESC_FALLBACK = {
-                    "Hospitality skills": "Practical service actions and daily guest care done the BED way.",
-                    "BED competencies": "Reading people and situations; proactive judgement; turning intent into consistent action.",
-                    "Taking ownership": "Acting independently, fixing problems, and sharing responsibility for outcomes.",
-                    Collaboration: "Building trust, communicating clearly, and helping across the BED community.",
+                    "Hospitality skills": "Standard skills for daily tasks and guest services",
+                    "BED competencies": "Advanced abilities to read people and situations",
+                    "Taking ownership": "Acting independently and sharing responsibility",
+                    Collaboration: "Building trust and helping others across BED",
                 };
 
                 function normName(n) {
@@ -1840,17 +1840,17 @@
             // === Final hot-fix v3 (must be the last script) ===
             (function () {
                 const MAP = {
-                    "Hospitality Skills": "Hospitality skills",
-                    "Hospitality Competencies": "BED competencies",
-                    "Taking Ownership": "Taking ownership",
+                    "Hospitality skills": "Hospitality skills",
+                    "Hospitality competencies": "BED competencies",
+                    "Taking ownership": "Taking ownership",
                     Collaboration: "Collaboration",
                 };
                 const ORDER = ["Hospitality skills", "BED competencies", "Taking ownership", "Collaboration"];
                 const DESC = {
-                    "Hospitality skills": "Practical service actions and daily guest care done the BED way.",
-                    "BED competencies": "Reading people and situations; proactive judgement; turning intent into consistent action.",
-                    "Taking ownership": "Acting independently, fixing problems, and sharing responsibility for outcomes.",
-                    Collaboration: "Building trust, communicating clearly, and helping across the BED community.",
+                    "Hospitality skills": "Standard skills for daily tasks and guest services",
+                    "BED competencies": "Advanced abilities to read people and situations",
+                    "Taking ownership": "Acting independently and sharing responsibility",
+                    Collaboration: "Building trust and helping others across BED",
                 };
                 const norm = (n) => MAP[n] || n;
 
